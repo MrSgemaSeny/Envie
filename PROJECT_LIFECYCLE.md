@@ -140,9 +140,9 @@ Blocker: нет
   ├── .gitignore
   └── README.md
   ```
-- [ ] Git init, .gitignore настроен (node_modules, target/, .env, uploads/)
-- [ ] README.md минимальный (что это, как запустить)
-- [ ] Секретов нет в коде с первого коммита
+- [x] Git init, .gitignore настроен (node_modules, target/, .env, uploads/)
+- [x] README.md минимальный (что это, как запустить)
+- [x] Секретов нет в коде с первого коммита
 
 ---
 
