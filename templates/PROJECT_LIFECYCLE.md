@@ -80,7 +80,7 @@ Blocker: нет
 - [x] **БД:** PostgreSQL — реляционная, знакома, миграции через Flyway
 - [x] **Хранилище файлов:** локальный диск (uploads папка в backend)
   — деплой только localhost, S3 не нужен
-- [x] **Деплой:** localhost only. Никакого CI/CD на старте.
+- [x] **Деплой:** Frontend -> GitHub Pages (через Actions), Backend -> localhost only.
 - [x] **API:** REST, /api/v1/
 
 ### 1.4 Архитектурные решения

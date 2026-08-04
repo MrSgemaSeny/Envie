@@ -24,7 +24,7 @@ MD-шаблоны, страница обоев/гифок с локальног�
 | БД | PostgreSQL + Flyway миграции |
 | AI | Anthropic API (claude-sonnet-4-6) |
 | Хранилище файлов | Локальный диск (uploads/) |
-| Деплой | localhost only |
+| Деплой | Frontend: GitHub Pages, Backend: localhost only |
 
 ---
 
@@ -91,6 +91,7 @@ _(заполняй по мере появления)_
 |------|-------------|
 | 2026-08-04 | Создана документация, PROJECT_LIFECYCLE.md, структура папок. Завершена Фаза 1. |
 | 2026-08-04 | Выполнена Фаза 2: Скелет проекта создан. Backend на Gradle, Frontend на Vite/Tailwind v4 |
+| 2026-08-04 | Настроен CI/CD для деплоя Frontend в GitHub Pages |
 
 ---
 
