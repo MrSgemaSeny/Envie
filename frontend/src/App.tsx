@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiClient } from './shared/api/client';
 import { FeedPage } from './pages/FeedPage/FeedPage';
 import { BoardPage } from './pages/BoardPage/BoardPage';
+import { IdeasPage } from './pages/IdeasPage/IdeasPage';
 import { Toaster, toast } from 'sonner';
 import { useEffect } from 'react';
 
@@ -50,7 +51,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<FeedPage />} />
           <Route path="/board" element={<BoardPage />} />
-          <Route path="/ideas" element={<div>Ideas Page Placeholder</div>} />
+          <Route path="/ideas" element={<IdeasPage />} />
           <Route path="/templates" element={<div>Templates Page Placeholder</div>} />
           <Route path="/wallpaper" element={<div>Wallpaper Page Placeholder</div>} />
         </Routes>
