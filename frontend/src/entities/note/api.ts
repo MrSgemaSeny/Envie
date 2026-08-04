@@ -9,7 +9,7 @@ export const useNotes = () => {
     queryKey: ['notes'],
     queryFn: async () => {
       const response = await apiClient.get('/notes');
-      return response.data.data;
+      return response.data.data as NoteDto[];
     },
   });
 };

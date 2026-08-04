@@ -33,10 +33,10 @@ function SidebarLink({ to, children }: { to: string; children: React.ReactNode }
   return (
     <Link
       to={to}
-      className={`block px-4 py-3 rounded-xl font-medium transition-all duration-300 ease-out active:scale-95 ${
+      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ease-out active:scale-[0.98] ${
         isActive
-          ? 'bg-primary/10 text-primary'
-          : 'text-muted-foreground hover:bg-input hover:text-foreground'
+          ? 'bg-muted text-foreground'
+          : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
       }`}
     >
       {children}
@@ -46,12 +46,15 @@ function SidebarLink({ to, children }: { to: string; children: React.ReactNode }
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden">
-      <aside className="w-64 border-r border-border bg-card flex flex-col p-4 flex-shrink-0">
-        <div className="mb-8 px-4">
-          <h2 className="text-xl font-bold tracking-tight text-foreground">Envie</h2>
+    <div className="flex h-screen bg-background text-foreground overflow-hidden selection:bg-primary/20">
+      <aside className="w-56 border-r border-border bg-background flex flex-col p-4 flex-shrink-0">
+        <div className="mb-6 px-2 flex items-center gap-2">
+          <div className="w-6 h-6 rounded bg-foreground flex items-center justify-center">
+            <div className="w-3 h-3 bg-background rounded-sm" />
+          </div>
+          <h2 className="text-base font-semibold tracking-tight text-foreground">Envie</h2>
         </div>
-        <nav className="flex flex-col gap-2 flex-1">
+        <nav className="flex flex-col gap-1 flex-1">
           <SidebarLink to="/">Dashboard</SidebarLink>
           <SidebarLink to="/notes">Notes</SidebarLink>
           <SidebarLink to="/board">Board</SidebarLink>
@@ -60,7 +63,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           <SidebarLink to="/wallpaper">Wallpaper</SidebarLink>
         </nav>
       </aside>
-      <main className="flex-1 overflow-auto p-6 max-w-7xl mx-auto w-full">
+      <main className="flex-1 overflow-auto bg-background p-6 max-w-6xl mx-auto w-full">
         {children}
       </main>
       <HealthCheck />
@@ -79,7 +82,7 @@ export default function App() {
           <Route path="/board" element={<BoardPage />} />
           <Route path="/ideas" element={<IdeasPage />} />
           <Route path="/templates" element={<TemplatesPage />} />
-          <Route path="/wallpaper" element={<div>Wallpaper Page Placeholder</div>} />
+          <Route path="/wallpaper" element={<div className="text-muted-foreground">Wallpaper Page Placeholder</div>} />
         </Routes>
       </Layout>
     </BrowserRouter>

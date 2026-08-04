@@ -9,77 +9,74 @@ export function TemplatesPage() {
   const { data: selectedTemplate, isLoading: templateLoading } = useGetTemplate(selectedTemplateName);
 
   return (
-    <div className="flex h-[calc(100vh-3rem)] gap-6">
-      {/* Sidebar */}
-      <div className="w-80 flex flex-col gap-5 flex-shrink-0">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Templates</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Manage your system templates.</p>
-        </div>
-        
-        <div className="flex-1 bg-card rounded-2xl border border-border shadow-[var(--shadow-glow)] overflow-hidden flex flex-col">
-          <div className="p-4 border-b border-border bg-card/80 backdrop-blur-sm">
-            <h2 className="font-semibold text-foreground text-sm tracking-wide uppercase">Available Templates</h2>
-          </div>
-          <div className="flex-1 overflow-y-auto p-3 bg-background/50">
+    <div className="flex flex-col h-[calc(100vh-3rem)] gap-4 animate-in fade-in duration-300">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Templates</h1>
+        <p className="text-muted-foreground text-sm">Manage and customize your system templates.</p>
+      </div>
+
+      <div className="flex flex-1 gap-6 overflow-hidden mt-4">
+        {/* Sidebar */}
+        <div className="w-64 flex flex-col gap-2 flex-shrink-0 border-r border-border pr-6">
+          <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+            Available Templates
+          </h2>
+          <div className="flex-1 overflow-y-auto">
             {templatesLoading ? (
-              <div className="p-4 text-center text-muted-foreground text-sm">Loading templates...</div>
+              <div className="text-sm text-muted-foreground">Loading templates...</div>
             ) : templates.length === 0 ? (
-              <div className="p-4 text-center text-muted-foreground text-sm">No templates found.</div>
+              <div className="text-sm text-muted-foreground">No templates found.</div>
             ) : (
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1">
                 {templates.map((template) => (
                   <button
                     key={template.name}
                     onClick={() => setSelectedTemplateName(template.name)}
-                    className={`text-left px-4 py-3 rounded-xl transition-all duration-200 ease-out active:scale-95 text-sm ${
+                    className={`text-left px-3 py-2 rounded-md transition-colors duration-200 ease-out active:scale-[0.98] text-sm flex justify-between items-center group ${
                       selectedTemplateName === template.name
-                        ? 'bg-primary/10 text-primary font-medium'
-                        : 'text-muted-foreground hover:bg-input hover:text-foreground'
+                        ? 'bg-muted text-foreground font-medium'
+                        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                     }`}
                   >
-                    <div className="flex flex-col gap-0.5">
-                      <span>{template.name}</span>
-                      <span className="text-[10px] opacity-70 font-normal">
-                        {new Date(template.updatedAt).toLocaleDateString()}
-                      </span>
-                    </div>
+                    <span className="truncate">{template.name}</span>
                   </button>
                 ))}
               </div>
             )}
           </div>
         </div>
-      </div>
 
-      {/* Main Area */}
-      <div className="flex-1 overflow-hidden">
-        {selectedTemplateName ? (
-          templateLoading ? (
-            <div className="h-full flex items-center justify-center bg-card rounded-2xl border border-border shadow-sm">
-              <div className="animate-pulse flex flex-col items-center gap-3">
-                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-muted-foreground text-sm">Loading template...</p>
+        {/* Main Area */}
+        <div className="flex-1 overflow-hidden bg-background">
+          {selectedTemplateName ? (
+            templateLoading ? (
+              <div className="h-full flex items-center justify-center">
+                <div className="text-muted-foreground text-sm flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-muted-foreground border-t-foreground rounded-full animate-spin" />
+                  Loading...
+                </div>
               </div>
-            </div>
-          ) : selectedTemplate ? (
-            <TemplateViewer template={selectedTemplate} />
+            ) : selectedTemplate ? (
+              <TemplateViewer template={selectedTemplate} />
+            ) : (
+              <div className="h-full flex items-center justify-center">
+                <p className="text-muted-foreground text-sm">Failed to load template.</p>
+              </div>
+            )
           ) : (
-            <div className="h-full flex items-center justify-center bg-card rounded-2xl border border-border shadow-sm">
-              <p className="text-muted-foreground">Failed to load template.</p>
+            <div className="h-full flex flex-col items-center justify-center text-center">
+              <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center mb-4 bg-muted/30">
+                <svg className="w-6 h-6 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <h2 className="text-lg font-medium text-foreground mb-1">No Template Selected</h2>
+              <p className="text-muted-foreground text-sm max-w-sm">
+                Select a template from the sidebar to view its contents and edit the markdown.
+              </p>
             </div>
-          )
-        ) : (
-          <div className="h-full flex flex-col items-center justify-center bg-card/30 rounded-2xl border border-border border-dashed shadow-sm">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-            </div>
-            <h2 className="text-xl font-semibold text-foreground mb-2">No Template Selected</h2>
-            <p className="text-muted-foreground text-sm max-w-xs text-center">
-              Select a template from the sidebar to view and edit its contents.
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

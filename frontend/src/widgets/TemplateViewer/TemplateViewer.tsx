@@ -35,27 +35,27 @@ export function TemplateViewer({ template }: Props) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-card rounded-2xl border border-border shadow-[var(--shadow-glow)] overflow-hidden">
-      <div className="flex items-center justify-between p-5 border-b border-border bg-card/80 backdrop-blur-sm z-10">
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex items-center justify-between pb-4 border-b border-border shrink-0">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground">{template.name}</h2>
+          <h2 className="text-xl font-semibold text-foreground">{template.name}</h2>
           <p className="text-xs text-muted-foreground mt-1">
             Last updated: {new Date(template.updatedAt).toLocaleString()}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {isEditing ? (
             <>
               <button
                 onClick={handleCancel}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 ease-out active:scale-95 rounded-xl hover:bg-input"
+                className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 ease-out active:scale-[0.98] rounded-md hover:bg-muted"
                 disabled={updateTemplate.isPending}
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 transition-all duration-200 ease-out active:scale-95 rounded-xl shadow-sm"
+                className="px-3 py-1.5 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 transition-colors duration-200 ease-out active:scale-[0.98] rounded-md"
                 disabled={updateTemplate.isPending}
               >
                 {updateTemplate.isPending ? 'Saving...' : 'Save'}
@@ -64,23 +64,24 @@ export function TemplateViewer({ template }: Props) {
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="px-4 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 transition-all duration-200 ease-out active:scale-95 rounded-xl"
+              className="px-3 py-1.5 text-sm font-medium text-foreground bg-muted hover:bg-muted/80 transition-colors duration-200 ease-out active:scale-[0.98] rounded-md"
             >
               Edit
             </button>
           )}
         </div>
       </div>
-      <div className="flex-1 overflow-auto bg-background/50">
+      <div className="flex-1 overflow-auto mt-6">
         {isEditing ? (
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full h-full p-6 bg-transparent text-foreground focus:outline-none resize-none font-mono text-sm leading-relaxed"
+            className="w-full h-full bg-transparent text-foreground focus:outline-none resize-none font-mono text-sm leading-relaxed"
             placeholder="Write your markdown here..."
+            spellCheck="false"
           />
         ) : (
-          <div className="p-8 markdown-content">
+          <div className="markdown-content">
             <Markdown remarkPlugins={[remarkGfm]}>
               {content}
             </Markdown>

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../shared/api/client';
-import { Task, Subtask } from './types';
+import { Task } from './types';
 
 
 
@@ -9,7 +9,7 @@ export const useTasks = () => {
     queryKey: ['tasks'],
     queryFn: async () => {
       const response = await apiClient.get('/tasks');
-      return response.data.data;
+      return response.data.data as Task[];
     },
   });
 };

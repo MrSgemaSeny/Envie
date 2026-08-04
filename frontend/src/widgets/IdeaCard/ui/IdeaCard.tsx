@@ -15,27 +15,27 @@ export const IdeaCard: React.FC<IdeaCardProps> = ({ idea }) => {
   const getStatusColor = (status: Idea['status']) => {
     switch (status) {
       case 'RAW':
-        return 'bg-muted text-muted-foreground';
+        return 'bg-muted/50 text-muted-foreground border-border';
       case 'EXPLORING':
-        return 'bg-blue-500/20 text-blue-400';
+        return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
       case 'ACCEPTED':
-        return 'bg-green-500/20 text-green-400';
+        return 'bg-green-500/10 text-green-500 border-green-500/20';
       case 'REJECTED':
-        return 'bg-destructive/20 text-destructive';
+        return 'bg-destructive/10 text-destructive border-destructive/20';
       default:
-        return 'bg-muted text-muted-foreground';
+        return 'bg-muted/50 text-muted-foreground border-border';
     }
   };
 
   return (
     <>
       <div
-        className={`flex flex-col bg-card rounded-2xl p-5 border border-border transition-all duration-300 ease-out shadow-[var(--shadow-glow)] hover:shadow-[var(--shadow-glow-hover)]`}
+        className={`flex flex-col bg-card rounded-xl p-5 border border-border shadow-sm relative group`}
       >
-        <div className="flex justify-between items-start mb-3">
-          <h3 className="font-semibold text-lg text-foreground">{idea.title}</h3>
+        <div className="flex justify-between items-start mb-4 gap-4">
+          <h3 className="font-semibold text-foreground text-sm leading-tight">{idea.title}</h3>
           <span
-            className={`text-xs font-semibold px-2 py-1 rounded-full ${getStatusColor(
+            className={`inline-flex items-center px-2 py-0.5 rounded-md border text-[11px] font-semibold tracking-wide whitespace-nowrap ${getStatusColor(
               idea.status
             )}`}
           >
@@ -43,82 +43,79 @@ export const IdeaCard: React.FC<IdeaCardProps> = ({ idea }) => {
           </span>
         </div>
 
-        <div className="flex flex-col gap-2 mb-4 text-sm text-muted-foreground">
-          <p>
-            <strong className="text-foreground">Summary:</strong> {idea.summary}
+        <div className="flex flex-col gap-3 mb-6 text-sm text-muted-foreground">
+          <p className="leading-relaxed">
+            <strong className="text-foreground font-medium">Summary:</strong> {idea.summary}
           </p>
           {idea.problem && (
-            <p>
-              <strong className="text-foreground">Problem:</strong> {idea.problem}
+            <p className="leading-relaxed">
+              <strong className="text-foreground font-medium">Problem:</strong> {idea.problem}
             </p>
           )}
           {idea.solution && (
-            <p>
-              <strong className="text-foreground">Solution:</strong> {idea.solution}
+            <p className="leading-relaxed">
+              <strong className="text-foreground font-medium">Solution:</strong> {idea.solution}
             </p>
           )}
           {idea.audience && (
-            <p>
-              <strong className="text-foreground">Audience:</strong> {idea.audience}
+            <p className="leading-relaxed">
+              <strong className="text-foreground font-medium">Audience:</strong> {idea.audience}
             </p>
           )}
           {idea.monetization && (
-            <p>
-              <strong className="text-foreground">Monetization:</strong> {idea.monetization}
+            <p className="leading-relaxed">
+              <strong className="text-foreground font-medium">Monetization:</strong> {idea.monetization}
             </p>
           )}
         </div>
 
-        <div className="mt-auto pt-4 flex flex-col gap-2">
-          <div className="flex gap-2">
-            <button
-              onClick={() => setIsEditDrawerOpen(true)}
-              className="flex-1 px-4 py-2 text-sm font-medium text-foreground bg-input/50 border border-border rounded-xl hover:bg-input transition-colors duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => setIsDeleteDrawerOpen(true)}
-              className="flex-1 px-4 py-2 text-sm font-medium text-destructive bg-destructive/10 border border-destructive/20 rounded-xl hover:bg-destructive/20 transition-colors duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
-            >
-              Delete
-            </button>
-          </div>
+        <div className="mt-auto pt-4 flex gap-2 border-t border-border/50">
+          <button
+            onClick={() => setIsEditDrawerOpen(true)}
+            className="flex-1 py-2 text-xs font-medium text-foreground bg-secondary/50 rounded-lg hover:bg-secondary transition-colors"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => setIsDeleteDrawerOpen(true)}
+            className="flex-1 py-2 text-xs font-medium text-destructive bg-destructive/10 rounded-lg hover:bg-destructive/20 transition-colors"
+          >
+            Delete
+          </button>
         </div>
       </div>
 
       <Drawer.Root open={isDeleteDrawerOpen} onOpenChange={setIsDeleteDrawerOpen}>
         <Drawer.Portal>
           <Drawer.Overlay className="fixed inset-0 bg-black/40 z-40 transition-opacity" />
-          <Drawer.Content className="bg-card flex flex-col rounded-t-[10px] mt-24 fixed bottom-0 left-0 right-0 z-50 focus:outline-none">
-            <div className="p-6 bg-card rounded-t-[10px]">
-              <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-muted mb-8" />
-              <div className="max-w-md mx-auto w-full text-center">
-                <Drawer.Title className="font-semibold text-xl mb-2 text-foreground">
-                  Delete Idea
-                </Drawer.Title>
-                <Drawer.Description className="text-muted-foreground mb-8">
-                  Are you sure you want to delete "{idea.title}"? This action cannot be undone.
-                </Drawer.Description>
-                <div className="flex gap-3">
+          <Drawer.Content className="bg-card flex flex-col rounded-t-[20px] max-h-[96%] fixed bottom-0 left-0 right-0 z-50 p-6 border-t border-border focus:outline-none">
+            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-muted mb-6" />
+            <div className="max-w-md mx-auto w-full">
+              <Drawer.Title className="font-semibold text-foreground text-xl mb-2 text-center">
+                Delete Idea
+              </Drawer.Title>
+              <Drawer.Description className="text-muted-foreground text-center mb-6">
+                Are you sure you want to delete "{idea.title}"? This action cannot be undone.
+              </Drawer.Description>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => {
+                    deleteIdea.mutate(idea.id, {
+                      onSuccess: () => setIsDeleteDrawerOpen(false),
+                    });
+                  }}
+                  disabled={deleteIdea.isPending}
+                  className="w-full py-2.5 bg-destructive text-destructive-foreground font-medium rounded-lg hover:opacity-90 transition-opacity active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+                >
+                  {deleteIdea.isPending ? 'Deleting...' : 'Delete Idea'}
+                </button>
+                <Drawer.Close asChild>
                   <button
-                    onClick={() => setIsDeleteDrawerOpen(false)}
-                    className="flex-1 px-4 py-3 font-medium text-foreground bg-input/50 rounded-xl hover:bg-input transition-colors duration-300 ease-out active:scale-95"
+                    className="w-full py-2.5 bg-muted text-foreground font-medium rounded-lg hover:bg-muted/80 transition-opacity active:scale-95"
                   >
                     Cancel
                   </button>
-                  <button
-                    onClick={() => {
-                      deleteIdea.mutate(idea.id, {
-                        onSuccess: () => setIsDeleteDrawerOpen(false),
-                      });
-                    }}
-                    disabled={deleteIdea.isPending}
-                    className="flex-1 px-4 py-3 font-medium text-destructive-foreground bg-destructive rounded-xl hover:opacity-90 transition-opacity duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
-                  >
-                    {deleteIdea.isPending ? 'Deleting...' : 'Delete'}
-                  </button>
-                </div>
+                </Drawer.Close>
               </div>
             </div>
           </Drawer.Content>
