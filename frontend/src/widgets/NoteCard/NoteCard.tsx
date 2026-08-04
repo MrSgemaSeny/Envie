@@ -25,7 +25,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
   };
 
   return (
-    <div className={`bg-card p-5 rounded-2xl border ${note.pinned ? 'border-primary' : 'border-border'} transition-all duration-300 ease-out`}>
+    <div className={`bg-card p-5 rounded-2xl border ${note.pinned ? 'border-primary' : 'border-border'} transition-all duration-300 ease-out shadow-[var(--shadow-glow)] hover:shadow-[var(--shadow-glow-hover)]`}>
       <div className="flex justify-between items-start mb-3">
         <span className="text-xs text-muted-foreground font-medium">
           {new Date(note.createdAt).toLocaleString()}

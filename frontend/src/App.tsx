@@ -1,12 +1,12 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from './shared/api/client';
+import { DashboardPage } from './pages/DashboardPage/DashboardPage';
 import { FeedPage } from './pages/FeedPage/FeedPage';
 import { BoardPage } from './pages/BoardPage/BoardPage';
 import { IdeasPage } from './pages/IdeasPage/IdeasPage';
 import { Toaster, toast } from 'sonner';
 import { useEffect } from 'react';
-
 
 function HealthCheck() {
   const { data, isLoading, error } = useQuery({
@@ -25,17 +25,41 @@ function HealthCheck() {
   return null;
 }
 
+function SidebarLink({ to, children }: { to: string; children: React.ReactNode }) {
+  const location = useLocation();
+  const isActive = location.pathname === to;
+
+  return (
+    <Link
+      to={to}
+      className={`block px-4 py-3 rounded-xl font-medium transition-all duration-300 ease-out active:scale-95 ${
+        isActive
+          ? 'bg-primary/10 text-primary'
+          : 'text-muted-foreground hover:bg-input hover:text-foreground'
+      }`}
+    >
+      {children}
+    </Link>
+  );
+}
+
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col relative bg-background text-foreground">
-      <nav className="bg-card border-b border-border p-4 flex gap-4">
-        <Link to="/" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Notes</Link>
-        <Link to="/board" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Board</Link>
-        <Link to="/ideas" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Ideas</Link>
-        <Link to="/templates" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Templates</Link>
-        <Link to="/wallpaper" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Wallpaper</Link>
-      </nav>
-      <main className="flex-1 p-6 max-w-7xl mx-auto w-full">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden">
+      <aside className="w-64 border-r border-border bg-card flex flex-col p-4 flex-shrink-0">
+        <div className="mb-8 px-4">
+          <h2 className="text-xl font-bold tracking-tight text-foreground">Envie</h2>
+        </div>
+        <nav className="flex flex-col gap-2 flex-1">
+          <SidebarLink to="/">Dashboard</SidebarLink>
+          <SidebarLink to="/notes">Notes</SidebarLink>
+          <SidebarLink to="/board">Board</SidebarLink>
+          <SidebarLink to="/ideas">Ideas</SidebarLink>
+          <SidebarLink to="/templates">Templates</SidebarLink>
+          <SidebarLink to="/wallpaper">Wallpaper</SidebarLink>
+        </nav>
+      </aside>
+      <main className="flex-1 overflow-auto p-6 max-w-7xl mx-auto w-full">
         {children}
       </main>
       <HealthCheck />
@@ -49,7 +73,8 @@ export default function App() {
       <Toaster theme="dark" position="bottom-right" />
       <Layout>
         <Routes>
-          <Route path="/" element={<FeedPage />} />
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/notes" element={<FeedPage />} />
           <Route path="/board" element={<BoardPage />} />
           <Route path="/ideas" element={<IdeasPage />} />
           <Route path="/templates" element={<div>Templates Page Placeholder</div>} />

@@ -29,7 +29,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   };
 
   return (
-    <div className="bg-card rounded-2xl p-5 border border-border flex flex-col gap-3 group transition-transform duration-300 ease-out">
+    <div className="bg-card rounded-2xl p-5 border border-border flex flex-col gap-3 group transition-all duration-300 ease-out shadow-[var(--shadow-glow)] hover:shadow-[var(--shadow-glow-hover)]">
       <div className="flex justify-between items-start">
         <h3 className="font-semibold text-foreground leading-tight">{task.title}</h3>
         <Drawer.Root>

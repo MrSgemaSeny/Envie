@@ -233,27 +233,19 @@ Blocker: нет
 ### 3.3 Модуль: Ideas (список идей)
 
 **БД миграция:**
-- [ ] V4__ideas.sql: таблица `ideas`
-  ```sql
-  ideas: id, title, summary, problem, solution, audience, monetization,
-         status (RAW/EXPLORING/ACCEPTED/REJECTED), ai_architecture, created_at, updated_at
-  ```
+- [x] V4__ideas.sql: таблица `ideas` (`id`, `title`, `summary`, `problem`, `solution`, `audience`, `monetization`, `status`, `ai_architecture`, `created_at`, `updated_at`)
 
 **Backend:**
-- [ ] IdeaEntity, IdeaStatus enum
-- [ ] IdeaService: CRUD + generateArchitecture (вызов Anthropic API)
-- [ ] IdeaController: GET /api/v1/ideas, POST /api/v1/ideas, PUT /api/v1/ideas/{id},
+- [x] IdeaEntity, IdeaStatus enum
+- [x] IdeaService: CRUD + generateArchitecture (вызов Anthropic API)
+- [x] IdeaController: GET /api/v1/ideas, POST /api/v1/ideas, PUT /api/v1/ideas/{id},
   DELETE /api/v1/ideas/{id}, POST /api/v1/ideas/{id}/generate-architecture
-- [ ] Anthropic API интеграция: POST запрос к api.anthropic.com/v1/messages
-  — ключ из application.yml (env var ANTHROPIC_API_KEY)
-  — промпт берётся из AI_IDEA_PROMPT.md шаблона
-  — результат сохраняется в ideas.ai_architecture
 
 **Frontend:**
-- [ ] entities/idea: типы, api-методы
-- [ ] features/createIdea, features/generateArchitecture
-- [ ] widgets/IdeaCard: карточка идеи + кнопка "Сгенерировать архитектуру"
-- [ ] pages/IdeasPage: список карточек + форма создания
+- [x] entities/idea: типы, api-методы
+- [x] features/createIdea, features/generateArchitecture
+- [x] widgets/IdeaCard: карточка идеи + кнопка "Сгенерировать архитектуру"
+- [x] pages/IdeasPage: список карточек + форма создания
 
 ### 3.4 Модуль: Templates (MD шаблоны)
 

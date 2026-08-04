@@ -23,7 +23,7 @@ export const IdeaCard: React.FC<IdeaCardProps> = ({ idea }) => {
   };
 
   return (
-    <div className="bg-card rounded-2xl p-6 border border-border flex flex-col gap-4 group transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-lg">
+    <div className="bg-card rounded-2xl p-6 border border-border flex flex-col gap-4 group transition-all duration-300 ease-out hover:-translate-y-1 shadow-[var(--shadow-glow)] hover:shadow-[var(--shadow-glow-hover)]">
       <div className="flex justify-between items-start gap-4">
         <div className="flex flex-col gap-2">
           <h3 className="font-semibold text-foreground text-xl leading-tight">{idea.title}</h3>

@@ -34,7 +34,7 @@ export const IdeaCard: React.FC<IdeaCardProps> = ({ idea }) => {
   return (
     <>
       <div
-        className={`flex flex-col bg-card rounded-2xl p-5 border border-border transition-all duration-300 ease-out ${
+        className={`flex flex-col bg-card rounded-2xl p-5 border border-border transition-all duration-300 ease-out shadow-[var(--shadow-glow)] hover:shadow-[var(--shadow-glow-hover)] ${
           isGenerating ? 'animate-pulse' : ''
         }`}
       >
