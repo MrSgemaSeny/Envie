@@ -153,28 +153,28 @@ Blocker: нет
 
 ### 2.1 Backend скелет
 
-- [ ] Проект создан через Spring Initializr (Java 21, Spring Boot 3, Web, JPA, PostgreSQL, Flyway, Lombok)
-- [ ] application.yml настроен: datasource, flyway, ddl-auto=validate
-- [ ] Первая миграция V1__init.sql создана (пустая, но рабочая)
-- [ ] Health endpoint `/actuator/health` отвечает
-- [ ] GlobalExceptionHandler настроен — все ошибки в ApiResponse<T>
-- [ ] Логирование через SLF4J/Logback, не System.out.println
-- [ ] CORS настроен на http://localhost:5173
+- [x] Проект создан через Spring Initializr (Java 21, Spring Boot 3, Web, JPA, PostgreSQL, Flyway, Lombok)
+- [x] application.yml настроен: datasource, flyway, ddl-auto=validate
+- [x] Первая миграция V1__init.sql создана (пустая, но рабочая)
+- [x] Health endpoint `/actuator/health` отвечает
+- [x] GlobalExceptionHandler настроен — все ошибки в ApiResponse<T>
+- [x] Логирование через SLF4J/Logback, не System.out.println
+- [x] CORS настроен на http://localhost:5173
 
 ### 2.2 Frontend скелет
 
-- [ ] Проект создан: `npm create vite@latest frontend -- --template react-ts`
-- [ ] Зависимости: tailwindcss v4, react-router-dom, axios, @tanstack/react-query
-- [ ] FSD структура папок создана (pages/widgets/features/entities/shared)
-- [ ] Роутинг настроен: 5 маршрутов (/, /board, /ideas, /templates, /wallpaper)
-- [ ] API клиент настроен: axios instance с baseURL из VITE_API_URL
-- [ ] .env.local: VITE_API_URL=http://localhost:8080/api/v1
-- [ ] Сборка проходит без ошибок: `npm run build`
+- [x] Проект создан: `npm create vite@latest frontend -- --template react-ts`
+- [x] Зависимости: tailwindcss v4, react-router-dom, axios, @tanstack/react-query
+- [x] FSD структура папок создана (pages/widgets/features/entities/shared)
+- [x] Роутинг настроен: 5 маршрутов (/, /board, /ideas, /templates, /wallpaper)
+- [x] API клиент настроен: axios instance с baseURL из VITE_API_URL
+- [x] .env.local: VITE_API_URL=http://localhost:8080/api/v1
+- [x] Сборка проходит без ошибок: `npm run build`
 
 ### 2.3 Проверка связки
 
-- [ ] Фронт делает запрос к `/actuator/health` и получает 200
-- [ ] Нет CORS ошибок в консоли
+- [x] Фронт делает запрос к `/actuator/health` и получает 200
+- [x] Нет CORS ошибок в консоли
 
 ---
 

@@ -7,5 +7,5 @@
 * **Frontend:** React 18, Vite, TypeScript, Tailwind v4
 
 ## Запуск
-1. Бэкенд: `cd backend && mvn spring-boot:run`
+1. Бэкенд: `cd backend && ./gradlew bootRun`
 2. Фронтенд: `cd frontend && npm run dev`
