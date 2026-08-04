@@ -9,7 +9,6 @@ export interface Idea {
   audience: string;
   monetization: string;
   status: IdeaStatus;
-  aiArchitecture: string | null;
   createdAt: string;
   updatedAt: string;
 }

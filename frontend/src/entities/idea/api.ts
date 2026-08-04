@@ -71,21 +71,3 @@ export function useDeleteIdea() {
     },
   });
 }
-
-export function useGenerateArchitectureIdea() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const response = await apiClient.post<ApiResponse<Idea>>(`/ideas/${id}/generate-architecture`);
-      return response.data.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ideaKeys.lists() });
-      toast.success('Architecture generated successfully');
-    },
-    onError: (error: Error) => {
-      toast.error(`Failed to generate architecture: ${error.message}`);
-    },
-  });
-}

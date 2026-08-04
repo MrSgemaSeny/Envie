@@ -69,7 +69,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Envie">
       <Toaster theme="dark" position="bottom-right" />
       <Layout>
         <Routes>

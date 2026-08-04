@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Idea } from '../../../entities/idea/types';
-import { useDeleteIdea, useGenerateArchitectureIdea } from '../../../entities/idea/api';
+import { useDeleteIdea } from '../../../entities/idea/api';
 import { Drawer } from 'vaul';
 import { CreateIdeaDrawer } from '../../../features/createIdea/ui/CreateIdeaDrawer';
 
@@ -12,8 +12,6 @@ export const IdeaCard: React.FC<IdeaCardProps> = ({ idea }) => {
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const deleteIdea = useDeleteIdea();
-  const generateArchitecture = useGenerateArchitectureIdea();
-
   const getStatusColor = (status: Idea['status']) => {
     switch (status) {
       case 'RAW':
@@ -29,14 +27,10 @@ export const IdeaCard: React.FC<IdeaCardProps> = ({ idea }) => {
     }
   };
 
-  const isGenerating = generateArchitecture.isPending;
-
   return (
     <>
       <div
-        className={`flex flex-col bg-card rounded-2xl p-5 border border-border transition-all duration-300 ease-out shadow-[var(--shadow-glow)] hover:shadow-[var(--shadow-glow-hover)] ${
-          isGenerating ? 'animate-pulse' : ''
-        }`}
+        className={`flex flex-col bg-card rounded-2xl p-5 border border-border transition-all duration-300 ease-out shadow-[var(--shadow-glow)] hover:shadow-[var(--shadow-glow-hover)]`}
       >
         <div className="flex justify-between items-start mb-3">
           <h3 className="font-semibold text-lg text-foreground">{idea.title}</h3>
@@ -75,37 +69,16 @@ export const IdeaCard: React.FC<IdeaCardProps> = ({ idea }) => {
           )}
         </div>
 
-        {idea.aiArchitecture && !isGenerating && (
-          <div className="mt-4 p-4 bg-background rounded-xl border border-border">
-            <h4 className="font-semibold text-foreground mb-2 text-sm">AI Architecture:</h4>
-            <div className="text-sm text-muted-foreground whitespace-pre-wrap font-mono">
-              {idea.aiArchitecture}
-            </div>
-          </div>
-        )}
-
         <div className="mt-auto pt-4 flex flex-col gap-2">
-          {!idea.aiArchitecture && (
-            <button
-              onClick={() => generateArchitecture.mutate(idea.id)}
-              disabled={isGenerating}
-              className="w-full px-4 py-2 font-medium text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-transform duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
-            >
-              {isGenerating ? 'Generating...' : 'Generate Architecture'}
-            </button>
-          )}
-          
           <div className="flex gap-2">
             <button
               onClick={() => setIsEditDrawerOpen(true)}
-              disabled={isGenerating}
               className="flex-1 px-4 py-2 text-sm font-medium text-foreground bg-input/50 border border-border rounded-xl hover:bg-input transition-colors duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
             >
               Edit
             </button>
             <button
               onClick={() => setIsDeleteDrawerOpen(true)}
-              disabled={isGenerating}
               className="flex-1 px-4 py-2 text-sm font-medium text-destructive bg-destructive/10 border border-destructive/20 rounded-xl hover:bg-destructive/20 transition-colors duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
             >
               Delete
