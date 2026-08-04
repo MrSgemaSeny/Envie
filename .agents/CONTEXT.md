@@ -9,6 +9,7 @@
 - Integrated custom `ease-out` timing functions in `index.css` for animations compliant with Emil's design rules.
 - **Design System Overhaul completed**: All components use semantic Tailwind tokens (`bg-background`, `text-foreground`, `border-border`, etc.). Hardcoded colors removed.
 - **UI Libraries integrated**: Added `sonner` for toast notifications and `vaul` for bottom sheet drawers (used in TaskCard deletion confirmation).
+- **Ideas Module implemented (Phase 3.3)**: Added Idea entity, `CreateIdeaDrawer`, `IdeaCard` with architecture generation pulse animation, and `IdeasPage` with CSS grid layout.
 
 ## Recent Changes
 - Updated `src/index.css` with semantic color palette based on `ENVIE_DESIGN.md`.
@@ -16,3 +17,4 @@
 - Replaced custom error divs with `sonner` Toaster in `App.tsx`.
 - Replaced `window.confirm` with Vaul `<Drawer>` for deleting tasks in `TaskCard`.
 - Enforced strict sub-300ms, transform/opacity only animations with custom ease-outs.
+- Implemented frontend for Ideas module: entity types, API hooks, UI components (`IdeaCard`, `CreateIdeaDrawer`, `IdeasPage`), integrated with `vaul` and `sonner`.

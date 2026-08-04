@@ -1,72 +1,91 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../shared/api/client';
-import { Idea, CreateIdeaPayload } from './types';
+import { Idea, CreateIdeaPayload, UpdateIdeaPayload, ApiResponse } from './types';
+import { toast } from 'sonner';
 
-const extractData = <T>(resData: unknown): T => {
-  if (resData && typeof resData === 'object' && 'data' in resData && !Array.isArray(resData) && !('id' in resData)) {
-    return (resData as { data: T }).data;
-  }
-  return resData as T;
+export const ideaKeys = {
+  all: ['ideas'] as const,
+  lists: () => [...ideaKeys.all, 'list'] as const,
+  detail: (id: string) => [...ideaKeys.all, 'detail', id] as const,
 };
 
-export const useIdeas = () => {
+export function useGetIdeas() {
   return useQuery({
-    queryKey: ['ideas'],
+    queryKey: ideaKeys.lists(),
     queryFn: async () => {
-      const response = await apiClient.get('/ideas');
-      return extractData<Idea[]>(response.data);
+      const response = await apiClient.get<ApiResponse<Idea[]>>('/ideas');
+      return response.data.data;
     },
   });
-};
+}
 
-export const useCreateIdea = () => {
+export function useCreateIdea() {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (payload: CreateIdeaPayload) => {
-      const response = await apiClient.post('/ideas', payload);
-      return extractData<Idea>(response.data);
+      const response = await apiClient.post<ApiResponse<Idea>>('/ideas', payload);
+      return response.data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ideas'] });
+      queryClient.invalidateQueries({ queryKey: ideaKeys.lists() });
+      toast.success('Idea created successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to create idea: ${error.message}`);
     },
   });
-};
+}
 
-export const useUpdateIdea = () => {
+export function useUpdateIdea() {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: async ({ id, payload }: { id: string; payload: CreateIdeaPayload }) => {
-      const response = await apiClient.put(`/ideas/${id}`, payload);
-      return extractData<Idea>(response.data);
+    mutationFn: async ({ id, payload }: { id: string; payload: UpdateIdeaPayload }) => {
+      const response = await apiClient.put<ApiResponse<Idea>>(`/ideas/${id}`, payload);
+      return response.data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ideas'] });
+      queryClient.invalidateQueries({ queryKey: ideaKeys.lists() });
+      toast.success('Idea updated successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to update idea: ${error.message}`);
     },
   });
-};
+}
 
-export const useDeleteIdea = () => {
+export function useDeleteIdea() {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const response = await apiClient.delete(`/ideas/${id}`);
-      return extractData<void>(response.data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ideas'] });
-    },
-  });
-};
 
-export const useGenerateArchitecture = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await apiClient.post(`/ideas/${id}/generate-architecture`);
-      return extractData<Idea>(response.data);
+      await apiClient.delete<ApiResponse<void>>(`/ideas/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ideas'] });
+      queryClient.invalidateQueries({ queryKey: ideaKeys.lists() });
+      toast.success('Idea deleted successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to delete idea: ${error.message}`);
     },
   });
-};
+}
+
+export function useGenerateArchitectureIdea() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiClient.post<ApiResponse<Idea>>(`/ideas/${id}/generate-architecture`);
+      return response.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ideaKeys.lists() });
+      toast.success('Architecture generated successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to generate architecture: ${error.message}`);
+    },
+  });
+}
