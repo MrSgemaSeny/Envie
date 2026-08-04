@@ -11,6 +11,11 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
+management:
+  endpoints:
+    web:
+      base-path: /api/v1/actuator
+
 envie:
   upload-dir: ${UPLOAD_DIR:./uploads}
   templates-dir: ${TEMPLATES_DIR:../templates}
