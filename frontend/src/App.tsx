@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { apiClient } from './shared/api/client';
 import { FeedPage } from './pages/FeedPage/FeedPage';
 import { BoardPage } from './pages/BoardPage/BoardPage';
+import { Toaster, toast } from 'sonner';
+import { useEffect } from 'react';
 
 
 function HealthCheck() {
@@ -11,29 +13,26 @@ function HealthCheck() {
     queryFn: () => apiClient.get('/actuator/health').then(res => res.data)
   });
 
-  return (
-    <div className="fixed bottom-4 right-4 p-4 rounded-lg shadow bg-white text-sm border border-gray-200">
-      <h3 className="font-bold text-gray-700 mb-1">Backend Status</h3>
-      {isLoading && <span className="text-gray-500">Checking...</span>}
-      {error && <span className="text-red-500 font-medium">Error: {error.message}</span>}
-      {data && (
-        <span className={data.status === 'UP' ? 'text-green-500 font-medium' : 'text-yellow-500 font-medium'}>
-          {data.status || 'UNKNOWN'}
-        </span>
-      )}
-    </div>
-  );
+  useEffect(() => {
+    if (error) {
+      toast.error(`Backend Error: ${error.message}`);
+    } else if (data?.status !== 'UP' && !isLoading && data) {
+      toast.error(`Backend Status: ${data.status}`);
+    }
+  }, [error, data, isLoading]);
+
+  return null;
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col relative">
-      <nav className="bg-white shadow-sm p-4 flex gap-4 border-b">
-        <Link to="/" className="text-primary font-bold hover:underline">Notes</Link>
-        <Link to="/board" className="text-primary font-bold hover:underline">Board</Link>
-        <Link to="/ideas" className="text-primary font-bold hover:underline">Ideas</Link>
-        <Link to="/templates" className="text-primary font-bold hover:underline">Templates</Link>
-        <Link to="/wallpaper" className="text-primary font-bold hover:underline">Wallpaper</Link>
+    <div className="min-h-screen flex flex-col relative bg-background text-foreground">
+      <nav className="bg-card border-b border-border p-4 flex gap-4">
+        <Link to="/" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Notes</Link>
+        <Link to="/board" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Board</Link>
+        <Link to="/ideas" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Ideas</Link>
+        <Link to="/templates" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Templates</Link>
+        <Link to="/wallpaper" className="text-muted-foreground hover:text-foreground font-medium transition-opacity duration-300 ease-out active:scale-95">Wallpaper</Link>
       </nav>
       <main className="flex-1 p-6 max-w-7xl mx-auto w-full">
         {children}
@@ -46,6 +45,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <Toaster theme="dark" position="bottom-right" />
       <Layout>
         <Routes>
           <Route path="/" element={<FeedPage />} />

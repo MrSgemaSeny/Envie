@@ -25,16 +25,16 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
   };
 
   return (
-    <div className={`bg-white p-5 rounded-2xl shadow-sm border ${note.pinned ? 'border-yellow-200' : 'border-gray-100'} hover:shadow-md transition-shadow`}>
+    <div className={`bg-card p-5 rounded-2xl border ${note.pinned ? 'border-primary' : 'border-border'} transition-all duration-300 ease-out`}>
       <div className="flex justify-between items-start mb-3">
-        <span className="text-xs text-gray-400 font-medium">
+        <span className="text-xs text-muted-foreground font-medium">
           {new Date(note.createdAt).toLocaleString()}
         </span>
         <div className="flex gap-2">
           <button
             onClick={handleTogglePin}
-            className={`p-1.5 rounded-full transition duration-150 ease-out active:scale-95 ${
-              note.pinned ? 'bg-yellow-100 text-yellow-600 hover:bg-yellow-200' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
+            className={`p-1.5 rounded-full transition-transform duration-300 ease-out active:scale-95 ${
+              note.pinned ? 'bg-primary text-primary-foreground opacity-90' : 'bg-input text-muted-foreground hover:text-foreground'
             }`}
             title={note.pinned ? "Unpin note" : "Pin note"}
           >
@@ -44,7 +44,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
           </button>
           <button
             onClick={handleDelete}
-            className="p-1.5 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition duration-150 ease-out active:scale-95"
+            className="p-1.5 rounded-full bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all duration-300 ease-out active:scale-95"
             title="Delete note"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,7 +54,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
         </div>
       </div>
       
-      <p className="text-gray-800 whitespace-pre-wrap mb-4">{note.content}</p>
+      <p className="text-foreground whitespace-pre-wrap mb-4">{note.content}</p>
       
       {note.media && note.media.length > 0 && (
         <div className="flex gap-3 mb-4 flex-wrap">
@@ -62,8 +62,8 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
             const url = getMediaUrl(m);
             if (m.mediaType.startsWith('image/')) {
               return (
-                <a key={m.id} href={url} target="_blank" rel="noopener noreferrer" className="block max-w-[200px] overflow-hidden rounded-xl border border-gray-100">
-                  <img src={url} alt={m.originalName} className="object-cover w-full h-32 hover:scale-[1.03] transition-transform duration-200 ease-out" />
+                <a key={m.id} href={url} target="_blank" rel="noopener noreferrer" className="block max-w-[200px] overflow-hidden rounded-xl border border-border">
+                  <img src={url} alt={m.originalName} className="object-cover w-full h-32 hover:opacity-90 transition-opacity duration-300 ease-out" />
                 </a>
               );
             }
@@ -73,7 +73,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
                 href={url} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                className="flex items-center gap-2 px-3 py-2 bg-input text-foreground rounded-lg hover:bg-muted transition-colors text-sm font-medium"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -88,7 +88,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
       {note.tags && note.tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {note.tags.map((tag, idx) => (
-            <span key={idx} className="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
+            <span key={idx} className="px-3 py-1 bg-input text-muted-foreground text-xs rounded-full font-medium">
               #{tag.trim()}
             </span>
           ))}

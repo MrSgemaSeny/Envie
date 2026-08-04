@@ -9,14 +9,14 @@ export const BoardPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="p-8 flex justify-center items-center h-full">
-        <div className="w-6 h-6 border-2 border-slate-300 border-t-slate-900 rounded-full animate-spin"></div>
+        <div className="w-6 h-6 border-2 border-border border-t-foreground rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="p-8 text-center text-red-500">
+      <div className="p-8 text-center text-destructive">
         Failed to load tasks.
       </div>
     );
@@ -25,8 +25,8 @@ export const BoardPage: React.FC = () => {
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto flex flex-col gap-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Board</h1>
-        <p className="text-slate-500 mt-1">Manage your tasks and subtasks.</p>
+        <h1 className="text-3xl font-bold text-foreground tracking-tight">Board</h1>
+        <p className="text-muted-foreground mt-1">Manage your tasks and subtasks.</p>
       </div>
 
       <div className="mb-4 w-full max-w-md">
@@ -42,7 +42,7 @@ export const BoardPage: React.FC = () => {
       </div>
       
       {tasks.length === 0 && (
-        <div className="text-center py-12 text-slate-400">
+        <div className="text-center py-12 text-muted-foreground">
           No tasks yet. Create one above!
         </div>
       )}
