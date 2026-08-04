@@ -27,7 +27,7 @@ public class NoteController {
     public ApiResponse<List<NoteDto>> getNotes(
             @PageableDefault(size = 50, sort = "createdAt") Pageable pageable) {
         Page<NoteDto> notesPage = noteService.getAllNotes(pageable);
-        return ApiResponse.success(notesPage.getContent());
+        return ApiResponse.ok(notesPage.getContent());
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
@@ -45,17 +45,17 @@ public class NoteController {
         }
         
         NoteDto created = noteService.createNote(content, tags, files);
-        return ApiResponse.success(created);
+        return ApiResponse.ok(created);
     }
 
     @PutMapping("/{id}/pin")
     public ApiResponse<NoteDto> togglePin(@PathVariable UUID id) {
-        return ApiResponse.success(noteService.togglePin(id));
+        return ApiResponse.ok(noteService.togglePin(id));
     }
 
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteNote(@PathVariable UUID id) {
         noteService.deleteNote(id);
-        return ApiResponse.success(null);
+        return ApiResponse.ok(null);
     }
 }
