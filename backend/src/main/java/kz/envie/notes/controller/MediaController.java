@@ -34,10 +34,12 @@ public class MediaController {
                 if (contentType == null) {
                     contentType = "application/octet-stream";
                 }
+                boolean isImage = contentType.startsWith("image/");
+                String dispositionType = isImage ? "inline" : "attachment";
                 
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .header(HttpHeaders.CONTENT_DISPOSITION, dispositionType + "; filename=\"" + resource.getFilename() + "\"")
                         .body(resource);
             } else {
                 return ResponseEntity.notFound().build();
