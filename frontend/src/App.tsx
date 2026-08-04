@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from './shared/api/client';
 import { FeedPage } from './pages/FeedPage/FeedPage';
+import { BoardPage } from './pages/BoardPage/BoardPage';
 
 
 function HealthCheck() {
@@ -48,7 +49,7 @@ export default function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<FeedPage />} />
-          <Route path="/board" element={<div>Board Page Placeholder</div>} />
+          <Route path="/board" element={<BoardPage />} />
           <Route path="/ideas" element={<div>Ideas Page Placeholder</div>} />
           <Route path="/templates" element={<div>Templates Page Placeholder</div>} />
           <Route path="/wallpaper" element={<div>Wallpaper Page Placeholder</div>} />
