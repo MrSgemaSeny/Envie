@@ -39,9 +39,6 @@ public class IdeaEntity {
     @Column(nullable = false)
     private IdeaStatus status = IdeaStatus.RAW;
 
-    @Column(name = "ai_architecture", columnDefinition = "TEXT")
-    private String aiArchitecture;
-
     @Column(name = "created_at", nullable = false)
     private ZonedDateTime createdAt;
 

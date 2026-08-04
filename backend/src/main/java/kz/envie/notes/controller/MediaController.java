@@ -29,7 +29,7 @@ public class MediaController {
             Path file = fileStorageService.getFilePath(filename);
             Resource resource = new UrlResource(file.toUri());
 
-            if (resource.exists() || resource.isReadable()) {
+            if (resource.exists() && resource.isReadable()) {
                 String contentType = Files.probeContentType(file);
                 if (contentType == null) {
                     contentType = "application/octet-stream";

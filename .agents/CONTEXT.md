@@ -20,3 +20,7 @@
 - Enforced strict sub-300ms, transform/opacity only animations with custom ease-outs.
 - Implemented frontend for Ideas module: entity types, API hooks, UI components (`IdeaCard`, `CreateIdeaDrawer`, `IdeasPage`), integrated with `vaul` and `sonner`.
 - Implemented backend for Ideas module: integrated Anthropic API for architecture generation.
+- **Frontend Layout Refactored**: Replaced top navigation with a persistent left-side vertical sidebar. Added a new `DashboardPage` as the default landing route (`/`), moving the feed to `/notes`.
+- **White Shadows UI**: Added custom css variables for white glows (`--shadow-glow`, `--shadow-glow-hover`) in `index.css` and applied them globally to all cards (`IdeaCard`, `NoteCard`, `TaskCard`) via Tailwind classes for an elevated premium look.
+- **Frontend AI Removal**: Removed all traces of AI architecture generation from the frontend codebase, including `aiArchitecture` fields, API hooks, and UI buttons.
+- **Templates Module Frontend (Phase 3.4)**: Added `react-markdown` and `remark-gfm`. Created Types and API hooks for templates. Implemented `TemplateViewer` for reading and editing markdown with custom thematic styling. Created `TemplatesPage` with a sidebar layout and connected it to the `/templates` route in `App.tsx`.

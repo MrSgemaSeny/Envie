@@ -237,9 +237,9 @@ Blocker: нет
 
 **Backend:**
 - [x] IdeaEntity, IdeaStatus enum
-- [x] IdeaService: CRUD + generateArchitecture (вызов Anthropic API)
+- [x] IdeaService: CRUD
 - [x] IdeaController: GET /api/v1/ideas, POST /api/v1/ideas, PUT /api/v1/ideas/{id},
-  DELETE /api/v1/ideas/{id}, POST /api/v1/ideas/{id}/generate-architecture
+  DELETE /api/v1/ideas/{id}
 
 **Frontend:**
 - [x] entities/idea: типы, api-методы

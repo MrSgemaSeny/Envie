@@ -1,6 +1,5 @@
 package kz.envie.ideas.service;
 
-import kz.envie.ideas.client.AnthropicClient;
 import kz.envie.ideas.dto.CreateIdeaRequest;
 import kz.envie.ideas.dto.IdeaResponse;
 import kz.envie.ideas.dto.UpdateIdeaRequest;
@@ -24,7 +23,6 @@ import java.util.UUID;
 public class IdeaService {
 
     private final IdeaRepository ideaRepository;
-    private final AnthropicClient anthropicClient;
 
     @Transactional(readOnly = true)
     public Page<IdeaResponse> getIdeas(Pageable pageable) {
@@ -70,32 +68,6 @@ public class IdeaService {
         ideaRepository.deleteById(id);
     }
 
-    @Transactional
-    public IdeaResponse generateArchitecture(UUID id) {
-        IdeaEntity idea = ideaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Idea not found"));
-                
-        try {
-            Path promptPath = Paths.get("../templates/AI_IDEA_PROMPT.md");
-            String promptTemplate = Files.readString(promptPath);
-            
-            String prompt = promptTemplate
-                    .replace("{{TITLE}}", idea.getTitle() != null ? idea.getTitle() : "")
-                    .replace("{{SUMMARY}}", idea.getSummary() != null ? idea.getSummary() : "")
-                    .replace("{{PROBLEM}}", idea.getProblem() != null ? idea.getProblem() : "")
-                    .replace("{{SOLUTION}}", idea.getSolution() != null ? idea.getSolution() : "")
-                    .replace("{{AUDIENCE}}", idea.getAudience() != null ? idea.getAudience() : "")
-                    .replace("{{MONETIZATION}}", idea.getMonetization() != null ? idea.getMonetization() : "");
-                    
-            String aiResponse = anthropicClient.generateArchitecture(prompt);
-            
-            idea.setAiArchitecture(aiResponse);
-            return mapToResponse(ideaRepository.save(idea));
-            
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to generate architecture: " + e.getMessage(), e);
-        }
-    }
 
     private IdeaResponse mapToResponse(IdeaEntity idea) {
         return new IdeaResponse(
@@ -107,7 +79,6 @@ public class IdeaService {
                 idea.getAudience(),
                 idea.getMonetization(),
                 idea.getStatus(),
-                idea.getAiArchitecture(),
                 idea.getCreatedAt(),
                 idea.getUpdatedAt()
         );

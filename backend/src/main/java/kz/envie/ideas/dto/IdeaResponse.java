@@ -14,7 +14,6 @@ public record IdeaResponse(
         String audience,
         String monetization,
         IdeaStatus status,
-        String aiArchitecture,
         ZonedDateTime createdAt,
         ZonedDateTime updatedAt
 ) {

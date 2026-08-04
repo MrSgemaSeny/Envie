@@ -43,6 +43,10 @@ public class FileStorageService {
     }
     
     public Path getFilePath(String filename) {
-        return this.uploadDir.resolve(filename).normalize();
+        Path resolvedPath = this.uploadDir.resolve(filename).normalize();
+        if (!resolvedPath.startsWith(this.uploadDir)) {
+            throw new RuntimeException("Path traversal attempt detected!");
+        }
+        return resolvedPath;
     }
 }

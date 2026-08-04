@@ -5,6 +5,7 @@ import { DashboardPage } from './pages/DashboardPage/DashboardPage';
 import { FeedPage } from './pages/FeedPage/FeedPage';
 import { BoardPage } from './pages/BoardPage/BoardPage';
 import { IdeasPage } from './pages/IdeasPage/IdeasPage';
+import { TemplatesPage } from './pages/TemplatesPage/TemplatesPage';
 import { Toaster, toast } from 'sonner';
 import { useEffect } from 'react';
 
@@ -77,7 +78,7 @@ export default function App() {
           <Route path="/notes" element={<FeedPage />} />
           <Route path="/board" element={<BoardPage />} />
           <Route path="/ideas" element={<IdeasPage />} />
-          <Route path="/templates" element={<div>Templates Page Placeholder</div>} />
+          <Route path="/templates" element={<TemplatesPage />} />
           <Route path="/wallpaper" element={<div>Wallpaper Page Placeholder</div>} />
         </Routes>
       </Layout>

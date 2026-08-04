@@ -32,8 +32,7 @@ SaaS CRM+бухгалтерия для бизнесов в Казахстане,
 | Слой | Технология |
 |------|-----------|
 | Backend | Java 21 + Spring Boot 3 + Spring Data JPA + PostgreSQL + Flyway |
-| Frontend | React 18 + Vite + TypeScript + Tailwind v4 (без config-файла, `@theme` в CSS) + Feature-Sliced Design |
-| AI-интеграция | Anthropic API (claude-sonnet-4-6), вызывается ТОЛЬКО с backend, ключ в env var |
+| Frontend | React 19 + Vite + TypeScript + Tailwind v4 (без config-файла, `@theme` в CSS) + Feature-Sliced Design |
 | Хранилище файлов | Локальный диск (`uploads/`), путь пишется в БД |
 | API | REST, `/api/v1/` с первого дня |
 | Деплой | localhost only, CI/CD не нужен на старте |

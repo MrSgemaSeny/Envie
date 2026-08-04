@@ -45,10 +45,4 @@ public class IdeaController {
         ideaService.deleteIdea(id);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
-
-    @PostMapping("/{id}/generate-architecture")
-    public ResponseEntity<ApiResponse<IdeaResponse>> generateArchitecture(@PathVariable UUID id) {
-        IdeaResponse updated = ideaService.generateArchitecture(id);
-        return ResponseEntity.ok(ApiResponse.ok(updated));
-    }
 }
