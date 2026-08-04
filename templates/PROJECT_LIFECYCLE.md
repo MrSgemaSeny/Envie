@@ -18,10 +18,10 @@
 ```
 Проект: Envie
 Фаза: 3 — Core модули
-Подфаза: 3.2 — Модуль Board (Канбан)
+Подфаза: 3.5 — Модуль Wallpaper
 Дата обновления: 2026-08-04
 Blocker: нет
-Следующий шаг: реализация Board (tasks, subtasks)
+Следующий шаг: реализация Wallpaper
 ```
 
 ---
@@ -253,14 +253,14 @@ Blocker: нет
 Backend только читает и отдаёт их. Редактирование — опционально.
 
 **Backend:**
-- [ ] TemplateController: GET /api/v1/templates — список файлов из папки
-- [ ] GET /api/v1/templates/{name} — содержимое файла
-- [ ] PUT /api/v1/templates/{name} — сохранить изменения (опционально)
+- [x] TemplateController: GET /api/v1/templates — список файлов из папки
+- [x] GET /api/v1/templates/{name} — содержимое файла
+- [x] PUT /api/v1/templates/{name} — сохранить изменения (опционально)
 
 **Frontend:**
-- [ ] entities/template: типы, api-методы
-- [ ] widgets/TemplateViewer: MD рендеринг (react-markdown)
-- [ ] pages/TemplatesPage: список шаблонов слева, просмотр/редактирование справа
+- [x] entities/template: типы, api-методы
+- [x] widgets/TemplateViewer: MD рендеринг (react-markdown)
+- [x] pages/TemplatesPage: список шаблонов слева, просмотр/редактирование справа
 
 ### 3.5 Модуль: Wallpaper (обои/гифки)
 
