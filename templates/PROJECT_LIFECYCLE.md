@@ -212,23 +212,23 @@ Blocker: нет
 ### 3.2 Модуль: Board (канбан)
 
 **БД миграция:**
-- [ ] V3__board.sql: таблицы `tasks`, `subtasks`
+- [x] V3__board.sql: таблицы `tasks`, `subtasks`
   ```sql
   tasks: id, title, description, created_at, updated_at
   subtasks: id, task_id, title, done, created_at
   ```
 
 **Backend:**
-- [ ] TaskEntity, SubtaskEntity
-- [ ] TaskService: CRUD задач + CRUD подзадач
-- [ ] TaskController: GET /api/v1/tasks, POST /api/v1/tasks, PUT /api/v1/tasks/{id}, DELETE /api/v1/tasks/{id}
-- [ ] SubtaskController: POST /api/v1/tasks/{id}/subtasks, PUT /api/v1/subtasks/{id}, DELETE /api/v1/subtasks/{id}
+- [x] TaskEntity, SubtaskEntity
+- [x] TaskService: CRUD задач + CRUD подзадач
+- [x] TaskController: GET /api/v1/tasks, POST /api/v1/tasks, PUT /api/v1/tasks/{id}, DELETE /api/v1/tasks/{id}
+- [x] SubtaskController: POST /api/v1/tasks/{id}/subtasks, PUT /api/v1/subtasks/{id}, DELETE /api/v1/subtasks/{id}
 
 **Frontend:**
-- [ ] entities/task: типы, api-методы
-- [ ] features/createTask, features/createSubtask
-- [ ] widgets/TaskCard: карточка с подзадачами (чекбоксы)
-- [ ] pages/BoardPage: сетка карточек + создать карточку
+- [x] entities/task: типы, api-методы
+- [x] features/createTask, features/createSubtask
+- [x] widgets/TaskCard: карточка с подзадачами (чекбоксы)
+- [x] pages/BoardPage: сетка карточек + создать карточку
 
 ### 3.3 Модуль: Ideas (список идей)
 

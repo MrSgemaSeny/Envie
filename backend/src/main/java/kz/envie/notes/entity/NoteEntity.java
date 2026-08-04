@@ -7,8 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -36,10 +36,10 @@ public class NoteEntity {
     private ZonedDateTime updatedAt;
 
     @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NoteTagEntity> tags = new ArrayList<>();
+    private Set<NoteTagEntity> tags = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NoteMediaEntity> media = new ArrayList<>();
+    private Set<NoteMediaEntity> media = new LinkedHashSet<>();
 
     public void addTag(NoteTagEntity tag) {
         tags.add(tag);
