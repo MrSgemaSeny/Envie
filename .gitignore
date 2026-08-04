@@ -22,7 +22,7 @@ coverage/
 !.env.example
 
 # Project specific
-uploads/
+backend/uploads/
 *.log
 .DS_Store
 *.zip

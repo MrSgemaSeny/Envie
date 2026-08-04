@@ -2,20 +2,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../shared/api/client';
 import { NoteDto, CreateNotePayload } from './types';
 
-// Helper to safely extract data whether it's wrapped in ApiResponse or not
-const extractData = <T>(resData: any): T => {
-  if (resData && typeof resData === 'object' && 'data' in resData && !Array.isArray(resData) && !('id' in resData)) {
-    return resData.data;
-  }
-  return resData;
-};
+
 
 export const useNotes = () => {
   return useQuery({
     queryKey: ['notes'],
     queryFn: async () => {
       const response = await apiClient.get('/notes');
-      return extractData<NoteDto[]>(response.data);
+      return response.data.data;
     },
   });
 };
@@ -38,7 +32,7 @@ export const useCreateNote = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      return extractData<NoteDto>(response.data);
+      return response.data.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
@@ -51,7 +45,7 @@ export const useTogglePin = () => {
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await apiClient.put(`/notes/${id}/pin`);
-      return extractData<NoteDto>(response.data);
+      return response.data.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
@@ -64,7 +58,7 @@ export const useDeleteNote = () => {
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await apiClient.delete(`/notes/${id}`);
-      return extractData<void>(response.data);
+      return response.data.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
