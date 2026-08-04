@@ -33,7 +33,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
         <div className="flex gap-2">
           <button
             onClick={handleTogglePin}
-            className={`p-1.5 rounded-full transition-colors ${
+            className={`p-1.5 rounded-full transition duration-150 ease-out active:scale-95 ${
               note.pinned ? 'bg-yellow-100 text-yellow-600 hover:bg-yellow-200' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
             }`}
             title={note.pinned ? "Unpin note" : "Pin note"}
@@ -44,7 +44,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
           </button>
           <button
             onClick={handleDelete}
-            className="p-1.5 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
+            className="p-1.5 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition duration-150 ease-out active:scale-95"
             title="Delete note"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,7 +63,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
             if (m.mediaType.startsWith('image/')) {
               return (
                 <a key={m.id} href={url} target="_blank" rel="noopener noreferrer" className="block max-w-[200px] overflow-hidden rounded-xl border border-gray-100">
-                  <img src={url} alt={m.originalName} className="object-cover w-full h-32 hover:scale-105 transition-transform duration-300" />
+                  <img src={url} alt={m.originalName} className="object-cover w-full h-32 hover:scale-[1.03] transition-transform duration-200 ease-out" />
                 </a>
               );
             }
