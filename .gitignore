@@ -1,8 +1,27 @@
-node_modules/
-target/
-.env
-.env.local
-uploads/
+# IDEs
 .idea/
 .vscode/
+*.iml
+out/
+
+# Backend (Gradle / Maven)
+.gradle/
+build/
+bin/
+target/
+
+# Frontend (Node)
+node_modules/
+dist/
+dist-ssr/
+coverage/
+
+# Envs
+.env
+.env.*
+!.env.example
+
+# Project specific
+uploads/
 *.log
+.DS_Store
