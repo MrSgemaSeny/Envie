@@ -36,14 +36,15 @@ export function useLadder(
 
     // Camera
     const cam = new THREE.PerspectiveCamera(50, W() / H(), 0.1, 200);
-    cam.position.set(0, 0, 14);
+    // Shift camera slightly right so that the ladder is positioned on the right side of the screen
+    cam.position.set(1.5, 0, 14);
 
-    // Lights
-    scene.add(new THREE.AmbientLight(0xffffff, 0.15));
-    const dLight = new THREE.DirectionalLight(0x7c3aed, 1.2);
+    // Lights - Pure white/gray lights for a beautiful monochrome aesthetic
+    scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+    const dLight = new THREE.DirectionalLight(0xffffff, 1.5);
     dLight.position.set(5, 5, 5);
     scene.add(dLight);
-    const dLight2 = new THREE.DirectionalLight(0x38bdf8, 0.8);
+    const dLight2 = new THREE.DirectionalLight(0xcccccc, 0.8);
     dLight2.position.set(-5, -3, 2);
     scene.add(dLight2);
 
@@ -54,6 +55,8 @@ export function useLadder(
     const TURNS = 2.5;
 
     const ladderGroup = new THREE.Group();
+    // Shift the ladder group to the right (x = 1.8)
+    ladderGroup.position.set(1.8, 0, 0);
     scene.add(ladderGroup);
 
     // Two helical rails
@@ -67,7 +70,8 @@ export function useLadder(
       rail2pts.push(new THREE.Vector3(Math.cos(angle + Math.PI) * RADIUS, y, Math.sin(angle + Math.PI) * RADIUS));
     }
 
-    const railMat = new THREE.LineBasicMaterial({ color: 0x3b3560, linewidth: 2 });
+    // Gray rail material
+    const railMat = new THREE.LineBasicMaterial({ color: 0x444444, linewidth: 2 });
     ladderGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(rail1pts), railMat));
     ladderGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(rail2pts), railMat));
 
@@ -77,7 +81,7 @@ export function useLadder(
       const t = i / STEPS;
       const angle = t * Math.PI * 2 * TURNS;
       const y = (t - 0.5) * HEIGHT;
-      const rungMat = new THREE.MeshStandardMaterial({ color: 0x1a1440, metalness: 0.6, roughness: 0.3 });
+      const rungMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.6, roughness: 0.3 });
       const rung = new THREE.Mesh(rungGeo, rungMat);
       rung.position.set(0, y, 0);
       rung.rotation.z = Math.PI / 2;
@@ -85,7 +89,7 @@ export function useLadder(
       ladderGroup.add(rung);
     }
 
-    // Glowing nodes at rail intersections
+    // Monochrome nodes at rail intersections (dim white/gray)
     const nodeGeo = new THREE.SphereGeometry(0.12, 12, 12);
     for (let i = 0; i < STEPS; i++) {
       const t = i / STEPS;
@@ -94,10 +98,10 @@ export function useLadder(
       [0, Math.PI].forEach((offset) => {
         const a = angle + offset;
         const nodeMat = new THREE.MeshStandardMaterial({
-          color: 0x7c3aed,
-          emissive: 0x5b21b6,
-          emissiveIntensity: 0.8,
-          metalness: 0.2,
+          color: 0x888888,
+          emissive: 0x444444,
+          emissiveIntensity: 0.6,
+          metalness: 0.4,
           roughness: 0.2,
         });
         const n = new THREE.Mesh(nodeGeo, nodeMat);
@@ -106,9 +110,9 @@ export function useLadder(
       });
     }
 
-    // Central spine
+    // Central spine (subtle gray)
     const spineGeo = new THREE.CylinderGeometry(0.015, 0.015, HEIGHT, 8);
-    const spineMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0369a1, emissiveIntensity: 0.5 });
+    const spineMat = new THREE.MeshStandardMaterial({ color: 0x555555, emissive: 0x222222, emissiveIntensity: 0.3 });
     ladderGroup.add(new THREE.Mesh(spineGeo, spineMat));
 
     // Stars
@@ -119,7 +123,7 @@ export function useLadder(
     }
     const starGeo = new THREE.BufferGeometry();
     starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
-    const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.5 });
+    const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.3 });
     scene.add(new THREE.Points(starGeo, starMat));
 
     // Animation state (smooth interpolation)
@@ -141,15 +145,15 @@ export function useLadder(
       const targetLadderRot = smoothP * Math.PI * 4;
       ladderRot += (targetLadderRot - ladderRot) * 0.06;
 
-      // Camera
+      // Camera - track slightly offset to align with the right-shifted ladder
       cam.position.y = camY;
-      cam.position.x = Math.sin(time * 0.3) * 0.3;
-      cam.lookAt(0, camY, 0);
+      cam.position.x = 1.5 + Math.sin(time * 0.3) * 0.3;
+      cam.lookAt(1.8, camY, 0);
 
       // Ladder rotation = scroll + idle spin
       ladderGroup.rotation.y = ladderRot + time * 0.06;
 
-      // Highlight rungs near scroll position
+      // Highlight rungs near scroll position in clean white glow
       const centerIdx = Math.floor(smoothP * STEPS);
       ladderGroup.children.forEach((child) => {
         if (
@@ -162,10 +166,10 @@ export function useLadder(
           const dist = Math.abs(rungIdx - centerIdx);
           const glow = Math.max(0, 1 - dist * 0.4);
           const mat = child.material as THREE.MeshStandardMaterial;
-          mat.color.setHex(glow > 0.3 ? 0x7c3aed : 0x1a1440);
+          mat.color.setHex(glow > 0.3 ? 0xffffff : 0x222222);
           mat.emissive = mat.emissive || new THREE.Color();
-          mat.emissive.setHex(glow > 0.3 ? 0x5b21b6 : 0x000000);
-          mat.emissiveIntensity = glow * 0.6;
+          mat.emissive.setHex(glow > 0.3 ? 0x888888 : 0x000000);
+          mat.emissiveIntensity = glow * 0.8;
         }
       });
 

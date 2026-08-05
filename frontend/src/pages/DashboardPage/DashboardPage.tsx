@@ -1,47 +1,10 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useLadder } from './useLadder';
+import { useNotes } from '../../entities/note/api';
+import { useTasks } from '../../entities/task/api';
+import { useGetIdeas } from '../../entities/idea/api';
 import './DashboardPage.css';
-
-interface Section {
-  eyebrow: string;
-  title: string;
-  body: string;
-  side: 'left' | 'right';
-}
-
-const SECTIONS: Section[] = [
-  {
-    eyebrow: '01 -- Vision',
-    title: 'Built for\none person',
-    body: 'Your stack, your rhythm.\nNo team rituals required.',
-    side: 'left',
-  },
-  {
-    eyebrow: '02 -- Notes',
-    title: 'Capture\neverything',
-    body: 'Stream of thought,\ntimestamped and searchable.',
-    side: 'right',
-  },
-  {
-    eyebrow: '03 -- Board',
-    title: 'Ship\nwithout noise',
-    body: 'Boards that move\nwhen you move.',
-    side: 'left',
-  },
-  {
-    eyebrow: '04 -- Ideas',
-    title: 'Validate\nbefore building',
-    body: 'Structure the problem.\nDefine the audience.',
-    side: 'right',
-  },
-  {
-    eyebrow: '05 -- You',
-    title: 'Your personal\nHQ',
-    body: 'One tab.\nEverything inside.',
-    side: 'left',
-  },
-];
 
 export const DashboardPage: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -51,6 +14,10 @@ export const DashboardPage: React.FC = () => {
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
   const introRef = useRef<HTMLDivElement>(null);
   const activeSectionRef = useRef(-1);
+
+  const { data: notes = [], isLoading: isNotesLoading } = useNotes();
+  const { data: tasks = [], isLoading: isTasksLoading } = useTasks();
+  const { data: ideas = [], isLoading: isIdeasLoading } = useGetIdeas();
 
   const { setProgress } = useLadder(canvasRef, stickyRef);
 
@@ -63,7 +30,8 @@ export const DashboardPage: React.FC = () => {
     const progressEl = progressRef.current;
     if (!scrollEl || !progressEl) return;
 
-    const secPoints = SECTIONS.map((_, i) => (i + 0.5) / SECTIONS.length);
+    // 5 sections mapping to 0.1, 0.3, 0.5, 0.7, 0.9
+    const secPoints = [0.1, 0.3, 0.5, 0.7, 0.9];
 
     function onScroll() {
       if (!scrollEl || !progressEl) return;
@@ -95,19 +63,18 @@ export const DashboardPage: React.FC = () => {
           const el = blockRefs.current[activeSectionRef.current];
           if (el) {
             el.style.opacity = '0';
-            el.style.transform = 'translateY(-50%) translateX(0)';
+            el.style.transform = 'translateY(-50%) translateX(-30px)';
           }
         }
         // Show new
         if (newActive >= 0) {
           const el = blockRefs.current[newActive];
-          const s = SECTIONS[newActive];
           if (el) {
             el.style.transition = 'none';
             el.style.opacity = '0';
-            el.style.transform = `translateY(-50%) translateX(${s.side === 'left' ? '-30px' : '30px'})`;
+            el.style.transform = 'translateY(-50%) translateX(-30px)';
             requestAnimationFrame(() => {
-              el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+              el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
               el.style.opacity = '1';
               el.style.transform = 'translateY(-50%) translateX(0)';
             });
@@ -119,7 +86,7 @@ export const DashboardPage: React.FC = () => {
 
     scrollEl.addEventListener('scroll', onScroll, { passive: true });
     return () => scrollEl.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [setProgress]);
 
   return (
     <div className="dash-scroll-root">
@@ -129,33 +96,158 @@ export const DashboardPage: React.FC = () => {
             {/* Three.js helix canvas */}
             <canvas ref={canvasRef} className="dash-canvas" />
 
-            {/* Text blocks */}
-            {SECTIONS.map((s, i) => (
-              <div
-                key={i}
-                ref={(el) => setBlockRef(el, i)}
-                className="dash-text-block"
-                style={{
-                  left: s.side === 'left' ? '48px' : 'auto',
-                  right: s.side === 'right' ? '48px' : 'auto',
-                  opacity: 0,
-                }}
-              >
-                <div className="dash-text-eyebrow">{s.eyebrow}</div>
-                <h2
-                  className="dash-text-title"
-                  dangerouslySetInnerHTML={{
-                    __html: s.title.replace('\n', '<br/>'),
-                  }}
-                />
-                <p
-                  className="dash-text-body"
-                  dangerouslySetInnerHTML={{
-                    __html: s.body.replace('\n', '<br/>'),
-                  }}
-                />
+            {/* Widget Blocks on the Left */}
+            
+            {/* Block 0: Stats & Overview */}
+            <div
+              ref={(el) => setBlockRef(el, 0)}
+              className="dash-text-block"
+              style={{ opacity: 0 }}
+            >
+              <div className="dash-text-eyebrow">01 / Workspace Stats</div>
+              <h2 className="dash-text-title">Your Brain</h2>
+              <p className="dash-text-body mb-4">Envie personal database is live and synchronized.</p>
+              
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div className="p-3 bg-white/5 border border-white/10 rounded-xl">
+                  <div className="text-2xl font-bold tracking-tight text-foreground">
+                    {isNotesLoading ? '...' : notes.length}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Notes</div>
+                </div>
+                <div className="p-3 bg-white/5 border border-white/10 rounded-xl">
+                  <div className="text-2xl font-bold tracking-tight text-foreground">
+                    {isTasksLoading ? '...' : tasks.length}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Tasks</div>
+                </div>
+                <div className="p-3 bg-white/5 border border-white/10 rounded-xl">
+                  <div className="text-2xl font-bold tracking-tight text-foreground">
+                    {isIdeasLoading ? '...' : ideas.length}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Ideas</div>
+                </div>
               </div>
-            ))}
+            </div>
+
+            {/* Block 1: Notes Quick Feed */}
+            <div
+              ref={(el) => setBlockRef(el, 1)}
+              className="dash-text-block"
+              style={{ opacity: 0 }}
+            >
+              <div className="dash-text-eyebrow">02 / Capture Feed</div>
+              <h2 className="dash-text-title">Recent Notes</h2>
+              <div className="flex flex-col gap-2 mb-4">
+                {isNotesLoading ? (
+                  <div className="text-xs text-muted-foreground">Loading recent notes...</div>
+                ) : notes.length === 0 ? (
+                  <div className="text-xs text-muted-foreground italic">No captured notes yet.</div>
+                ) : (
+                  notes.slice(0, 2).map(n => (
+                    <div key={n.id} className="p-3 bg-white/5 border border-white/5 rounded-lg text-left">
+                      <p className="text-xs text-foreground line-clamp-2 leading-relaxed">
+                        {n.content || 'Untitled Note'}
+                      </p>
+                      <span className="text-[9px] text-muted-foreground mt-1.5 block">
+                        {new Date(n.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+              <Link to="/notes" className="dash-action-btn">
+                Open Notes Feed →
+              </Link>
+            </div>
+
+            {/* Block 2: Kanban Tasks */}
+            <div
+              ref={(el) => setBlockRef(el, 2)}
+              className="dash-text-block"
+              style={{ opacity: 0 }}
+            >
+              <div className="dash-text-eyebrow">03 / Action Board</div>
+              <h2 className="dash-text-title">Active Tasks</h2>
+              <div className="flex flex-col gap-2 mb-4">
+                {isTasksLoading ? (
+                  <div className="text-xs text-muted-foreground">Loading active tasks...</div>
+                ) : tasks.length === 0 ? (
+                  <div className="text-xs text-muted-foreground italic">All caught up! No tasks left.</div>
+                ) : (
+                  tasks.slice(0, 3).map(t => (
+                    <div key={t.id} className="p-3 bg-white/5 border border-white/5 rounded-lg flex items-center justify-between">
+                      <span className="text-xs text-foreground truncate max-w-[200px]">
+                        {t.title}
+                      </span>
+                      {t.subtasks && t.subtasks.length > 0 && (
+                        <span className="text-[10px] text-muted-foreground">
+                          {t.subtasks.filter(s => s.done).length}/{t.subtasks.length} subtasks
+                        </span>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+              <Link to="/board" className="dash-action-btn">
+                Open Kanban Board →
+              </Link>
+            </div>
+
+            {/* Block 3: Ideas Canvas */}
+            <div
+              ref={(el) => setBlockRef(el, 3)}
+              className="dash-text-block"
+              style={{ opacity: 0 }}
+            >
+              <div className="dash-text-eyebrow">04 / Product Canvas</div>
+              <h2 className="dash-text-title">Recent Ideas</h2>
+              <div className="flex flex-col gap-2 mb-4">
+                {isIdeasLoading ? (
+                  <div className="text-xs text-muted-foreground">Loading ideas...</div>
+                ) : ideas.length === 0 ? (
+                  <div className="text-xs text-muted-foreground italic">No ideas structured yet.</div>
+                ) : (
+                  ideas.slice(0, 2).map(id => (
+                    <div key={id.id} className="p-3 bg-white/5 border border-white/5 rounded-lg flex flex-col gap-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-medium text-foreground truncate">{id.title}</span>
+                        <span className="text-[8px] bg-white/10 px-1.5 py-0.5 rounded text-muted-foreground uppercase font-bold tracking-wider">
+                          {id.status}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground line-clamp-1">{id.summary}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+              <Link to="/ideas" className="dash-action-btn">
+                Open Ideas Space →
+              </Link>
+            </div>
+
+            {/* Block 4: System Configurations */}
+            <div
+              ref={(el) => setBlockRef(el, 4)}
+              className="dash-text-block"
+              style={{ opacity: 0 }}
+            >
+              <div className="dash-text-eyebrow">05 / System Core</div>
+              <h2 className="dash-text-title">Control Panel</h2>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-4">
+                Configure your system templates or update workspace appearance.
+              </p>
+              <div className="flex flex-col gap-2">
+                <Link to="/templates" className="p-3 bg-white/5 border border-white/5 rounded-lg hover:bg-white/10 transition-colors flex items-center justify-between text-xs text-foreground font-medium pointer-events-auto">
+                  <span>Markdown Templates</span>
+                  <span className="text-muted-foreground">→</span>
+                </Link>
+                <Link to="/wallpaper" className="p-3 bg-white/5 border border-white/5 rounded-lg hover:bg-white/10 transition-colors flex items-center justify-between text-xs text-foreground font-medium pointer-events-auto">
+                  <span>Workspace Wallpapers</span>
+                  <span className="text-muted-foreground">→</span>
+                </Link>
+              </div>
+            </div>
 
             {/* Intro block -- visible at scroll=0 */}
             <div className="dash-intro" ref={introRef}>
@@ -189,3 +281,4 @@ export const DashboardPage: React.FC = () => {
     </div>
   );
 };
+
