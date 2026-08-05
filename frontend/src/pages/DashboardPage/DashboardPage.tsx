@@ -65,17 +65,19 @@ export const DashboardPage: React.FC = () => {
   useEffect(() => {
     const mainEl = document.querySelector('main');
     const scrollTarget = mainEl || window;
-    
+    let lastY = 0;
     const handleScroll = () => {
       const y = mainEl ? mainEl.scrollTop : window.scrollY;
       const nav = document.getElementById('main-nav');
       if (!nav) return;
 
-      if (y > 80) {
-        nav.classList.add('visible');
-      } else {
+      // Show nav when scrolling up or at the top. Hide when scrolling down.
+      if (y > lastY && y > 80) {
         nav.classList.remove('visible');
+      } else if (y < lastY || y <= 80) {
+        nav.classList.add('visible');
       }
+      lastY = y;
     };
 
     scrollTarget.addEventListener('scroll', handleScroll, { passive: true });
@@ -337,6 +339,7 @@ export const DashboardPage: React.FC = () => {
     let targetCamY = 0;
     let ladderRot = 0;
     let targetLadderRot = 0;
+
 
     const onScroll = () => {
       const st = mainEl.scrollTop;
