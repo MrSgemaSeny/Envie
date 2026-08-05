@@ -50,9 +50,10 @@ function SidebarLink({ to, children }: { to: string; children: React.ReactNode }
 function Layout({ children }: { children: React.ReactNode }) {
   const { data: activeWallpaper } = useActiveWallpaper();
   const isVideo = activeWallpaper?.filename ? /\.(mp4|webm|mov)$/i.test(activeWallpaper.filename) : false;
+  const isGif = activeWallpaper?.filename ? /\.gif$/i.test(activeWallpaper.filename) : false;
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
-  const bgStyle = activeWallpaper && !isVideo ? {
+  const bgStyle = activeWallpaper && !isVideo && !isGif ? {
     backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeWallpaper.filename})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center'
@@ -70,25 +71,23 @@ function Layout({ children }: { children: React.ReactNode }) {
           playsInline
         />
       )}
-      {activeWallpaper && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
+      {activeWallpaper && !isGif && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
       
       {/* Collapsible Hamburger Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className={`fixed top-4 z-30 p-2 rounded-lg bg-background/60 border border-border/40 backdrop-blur-md hover:bg-muted text-foreground transition-all duration-300 ease-out active:scale-95 ${
-          isSidebarOpen ? 'left-[236px]' : 'left-4'
-        }`}
+        className="fixed top-4 left-4 z-30 p-2 rounded-lg bg-background/60 border border-border/40 backdrop-blur-md hover:bg-muted text-foreground transition-transform duration-200 active:scale-95"
         aria-label="Toggle Sidebar"
       >
-        <div className="w-4 h-4 relative">
-          <span className={`absolute left-0 right-0 h-0.5 bg-foreground rounded transition-all duration-300 ${isSidebarOpen ? 'top-1.5 rotate-45' : 'top-0.5'}`} />
-          <span className={`absolute left-0 right-0 h-0.5 bg-foreground rounded transition-all duration-300 top-[7px] ${isSidebarOpen ? 'opacity-0 scale-x-0' : ''}`} />
-          <span className={`absolute left-0 right-0 h-0.5 bg-foreground rounded transition-all duration-300 ${isSidebarOpen ? 'bottom-1.5 -rotate-45' : 'bottom-0.5'}`} />
+        <div className="w-4 h-4 flex flex-col justify-between py-0.5">
+          <span className="w-4 h-0.5 bg-foreground rounded" />
+          <span className="w-4 h-0.5 bg-foreground rounded" />
+          <span className="w-4 h-0.5 bg-foreground rounded" />
         </div>
       </button>
 
       <aside className={`transition-all duration-300 ease-in-out ${
-        isSidebarOpen ? 'w-56 border-r border-border/50 p-4' : 'w-0 p-0 border-r-0 overflow-hidden'
+        isSidebarOpen ? 'w-56 border-r border-border/50 p-4 pt-16' : 'w-0 p-0 border-r-0 overflow-hidden'
       } bg-background/60 backdrop-blur-md flex flex-col flex-shrink-0 z-20 relative`}>
         <div className="w-48 flex flex-col h-full flex-shrink-0">
           <div className="mb-6 px-2 flex items-center gap-2">
@@ -105,10 +104,21 @@ function Layout({ children }: { children: React.ReactNode }) {
             <SidebarLink to="/templates">Templates</SidebarLink>
             <SidebarLink to="/wallpaper">Wallpaper</SidebarLink>
           </nav>
+          
+          {/* Active GIF Wallpaper in sidebar 1x1 */}
+          {activeWallpaper && isGif && (
+            <div className="mt-auto pt-4 border-t border-border/10">
+              <img
+                src={`${apiClient.defaults.baseURL}/media/${activeWallpaper.filename}`}
+                alt="active gif"
+                className="w-full aspect-square object-cover rounded-xl border border-border/40"
+              />
+            </div>
+          )}
         </div>
       </aside>
       <main className={`flex-1 overflow-auto w-full z-10 relative transition-all duration-300 ease-in-out ${
-        isSidebarOpen ? 'pl-0' : 'pl-12'
+        isSidebarOpen ? 'pl-0' : 'pl-14'
       }`}>
         {children}
       </main>
