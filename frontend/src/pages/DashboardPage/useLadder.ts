@@ -75,13 +75,13 @@ export function useLadder(
     ladderGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(rail1pts), railMat));
     ladderGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(rail2pts), railMat));
 
-    // Rungs
+    // Rungs (uniformly styled silver cylinders)
+    const rungMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.5, roughness: 0.3 });
     const rungGeo = new THREE.CylinderGeometry(0.04, 0.04, RADIUS * 2, 8);
     for (let i = 0; i < STEPS; i++) {
       const t = i / STEPS;
       const angle = t * Math.PI * 2 * TURNS;
       const y = (t - 0.5) * HEIGHT;
-      const rungMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.6, roughness: 0.3 });
       const rung = new THREE.Mesh(rungGeo, rungMat);
       rung.position.set(0, y, 0);
       rung.rotation.z = Math.PI / 2;
@@ -91,19 +91,19 @@ export function useLadder(
 
     // Monochrome nodes at rail intersections (dim white/gray)
     const nodeGeo = new THREE.SphereGeometry(0.12, 12, 12);
+    const nodeMat = new THREE.MeshStandardMaterial({
+      color: 0xbbbbbb,
+      emissive: 0x333333,
+      emissiveIntensity: 0.5,
+      metalness: 0.4,
+      roughness: 0.2,
+    });
     for (let i = 0; i < STEPS; i++) {
       const t = i / STEPS;
       const angle = t * Math.PI * 2 * TURNS;
       const y = (t - 0.5) * HEIGHT;
       [0, Math.PI].forEach((offset) => {
         const a = angle + offset;
-        const nodeMat = new THREE.MeshStandardMaterial({
-          color: 0x888888,
-          emissive: 0x444444,
-          emissiveIntensity: 0.6,
-          metalness: 0.4,
-          roughness: 0.2,
-        });
         const n = new THREE.Mesh(nodeGeo, nodeMat);
         n.position.set(Math.cos(a) * RADIUS, y, Math.sin(a) * RADIUS);
         ladderGroup.add(n);
@@ -153,26 +153,6 @@ export function useLadder(
       // Ladder rotation = scroll + idle spin
       ladderGroup.rotation.y = ladderRot + time * 0.06;
 
-      // Highlight rungs near scroll position in clean white glow
-      const centerIdx = Math.floor(smoothP * STEPS);
-      ladderGroup.children.forEach((child) => {
-        if (
-          child instanceof THREE.Mesh &&
-          child.geometry === rungGeo
-        ) {
-          const rungY = child.position.y;
-          const rungT = (rungY / HEIGHT) + 0.5;
-          const rungIdx = Math.round(rungT * STEPS);
-          const dist = Math.abs(rungIdx - centerIdx);
-          const glow = Math.max(0, 1 - dist * 0.4);
-          const mat = child.material as THREE.MeshStandardMaterial;
-          mat.color.setHex(glow > 0.3 ? 0xffffff : 0x222222);
-          mat.emissive = mat.emissive || new THREE.Color();
-          mat.emissive.setHex(glow > 0.3 ? 0x888888 : 0x000000);
-          mat.emissiveIntensity = glow * 0.8;
-        }
-      });
-
       renderer.render(scene, cam);
     }
     animate();
@@ -204,7 +184,9 @@ export function useLadder(
       starMat.dispose();
       railMat.dispose();
       rungGeo.dispose();
+      rungMat.dispose();
       nodeGeo.dispose();
+      nodeMat.dispose();
       spineGeo.dispose();
       spineMat.dispose();
       renderer.dispose();
