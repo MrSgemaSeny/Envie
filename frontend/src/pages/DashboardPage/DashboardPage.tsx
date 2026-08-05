@@ -149,14 +149,15 @@ export const DashboardPage: React.FC = () => {
     scene.add(cube);
 
     // Glowing core
-    const coreGeo = new THREE.SphereGeometry(0.7, 24, 24);
+    const coreGeo = new THREE.SphereGeometry(0.7, 32, 32);
     const coreMat = new THREE.MeshStandardMaterial({
-      color: 0x222222,
+      color: 0x1a1a1a,
       emissive: 0xffffff,
-      emissiveIntensity: 0.15,
-      metalness: 0.9,
+      emissiveIntensity: 0.1,
+      metalness: 0.8,
       roughness: 0.2,
-      wireframe: true,
+      transparent: true,
+      opacity: 0.85,
     });
     const core = new THREE.Mesh(coreGeo, coreMat);
     scene.add(core);
