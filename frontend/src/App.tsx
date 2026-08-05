@@ -8,6 +8,7 @@ import { IdeasPage } from './pages/IdeasPage/IdeasPage';
 import { TemplatesPage } from './pages/TemplatesPage/TemplatesPage';
 import { WallpaperPage } from './pages/WallpaperPage/WallpaperPage';
 import { LandingPage } from './pages/LandingPage/LandingPage';
+import { ForYouPage } from './pages/ForYouPage/ForYouPage';
 import { useActiveWallpapers } from './entities/wallpaper/api';
 import { Toaster, toast } from 'sonner';
 import { useEffect, useState } from 'react';
@@ -53,6 +54,34 @@ function Layout({ children }: { children: React.ReactNode }) {
   const activeBackground = wallpapersArray.find((w: any) => !/\.gif$/i.test(w.filename));
   const activeGif = wallpapersArray.find((w: any) => /\.gif$/i.test(w.filename));
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const location = useLocation();
+  const isForYou = location.pathname === '/foryou';
+  const [isMouseIdle, setIsMouseIdle] = useState(false);
+
+  useEffect(() => {
+    if (!isForYou) {
+      setIsMouseIdle(false);
+      return;
+    }
+    
+    // Auto-close sidebar on the For You page for maximum immersion
+    setIsSidebarOpen(false);
+    
+    let timeout: ReturnType<typeof setTimeout>;
+    const handleMouseMove = () => {
+      setIsMouseIdle(false);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => setIsMouseIdle(true), 2500);
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    timeout = setTimeout(() => setIsMouseIdle(true), 2500);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(timeout);
+    };
+  }, [isForYou]);
 
   const isVideo = activeBackground?.filename ? /\.(mp4|webm|mov)$/i.test(activeBackground.filename) : false;
   
@@ -81,7 +110,9 @@ function Layout({ children }: { children: React.ReactNode }) {
       {/* Collapsible Hamburger Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed top-4 left-4 z-30 p-2 rounded-lg bg-background/60 border border-border/40 backdrop-blur-md hover:bg-muted text-foreground transition-transform duration-200 active:scale-95"
+        className={`fixed top-4 left-4 z-30 p-2 rounded-lg bg-background/60 border border-border/40 backdrop-blur-md hover:bg-muted text-foreground transition-all duration-300 active:scale-95 ${
+          isForYou && isMouseIdle ? 'opacity-0 pointer-events-none -translate-x-4' : 'opacity-100 translate-x-0'
+        }`}
         aria-label="Toggle Sidebar"
       >
         <div className="w-4 h-4 flex flex-col justify-between py-0.5">
@@ -92,7 +123,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       </button>
 
       <aside className={`transition-all duration-300 ease-in-out ${
-        isSidebarOpen ? 'ml-0' : '-ml-56'
+        isSidebarOpen && !(isForYou && isMouseIdle) ? 'ml-0' : '-ml-56'
       } w-56 border-r border-border/50 p-4 pt-16 bg-background/60 backdrop-blur-md flex flex-col flex-shrink-0 z-20 relative`}>
         <div className="w-48 flex flex-col h-full flex-shrink-0">
           <div className="mb-6 px-2 flex items-center gap-2">
@@ -108,6 +139,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             <SidebarLink to="/ideas">Ideas</SidebarLink>
             <SidebarLink to="/templates">Templates</SidebarLink>
             <SidebarLink to="/wallpaper">Wallpaper</SidebarLink>
+            <SidebarLink to="/foryou">For you.</SidebarLink>
           </nav>
           
           {/* Active GIF Wallpaper in sidebar 1x1 */}
@@ -142,6 +174,7 @@ function AppRoutes() {
         <Route path="/ideas" element={<IdeasPage />} />
         <Route path="/templates" element={<TemplatesPage />} />
         <Route path="/wallpaper" element={<WallpaperPage />} />
+        <Route path="/foryou" element={<ForYouPage />} />
       </Routes>
     </Layout>
   );
