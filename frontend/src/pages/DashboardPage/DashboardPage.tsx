@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useLadder } from './useLadder';
 import './DashboardPage.css';
 
 interface Section {
@@ -45,9 +46,13 @@ const SECTIONS: Section[] = [
 export const DashboardPage: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
   const introRef = useRef<HTMLDivElement>(null);
   const activeSectionRef = useRef(-1);
+
+  const { setProgress } = useLadder(canvasRef, stickyRef);
 
   const setBlockRef = useCallback((el: HTMLDivElement | null, idx: number) => {
     blockRefs.current[idx] = el;
@@ -67,6 +72,9 @@ export const DashboardPage: React.FC = () => {
 
       // Progress bar
       progressEl.style.height = `${p * 100}%`;
+
+      // Feed scroll progress to Three.js ladder
+      setProgress(p);
 
       // Fade out intro (disappears within first 5% of scroll)
       if (introRef.current) {
@@ -117,9 +125,9 @@ export const DashboardPage: React.FC = () => {
     <div className="dash-scroll-root">
       <div className="dash-scroll-area" ref={scrollRef}>
         <div className="dash-scroll-inner">
-          <div className="dash-sticky">
-            {/* Gradient background */}
-            <div className="dash-gradient-bg" />
+          <div className="dash-sticky" ref={stickyRef}>
+            {/* Three.js helix canvas */}
+            <canvas ref={canvasRef} className="dash-canvas" />
 
             {/* Text blocks */}
             {SECTIONS.map((s, i) => (
