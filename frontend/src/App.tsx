@@ -58,7 +58,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   
   const bgStyle = activeBackground && !isVideo ? {
     backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeBackground.filename})`,
-    backgroundSize: 'contain',
+    backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     backgroundAttachment: 'fixed'
