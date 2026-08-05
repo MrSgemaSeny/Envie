@@ -16,9 +16,20 @@ export function useActiveWallpaper() {
   return useQuery({
     queryKey: ['wallpapers', 'active'],
     queryFn: async () => {
-      const res = await apiClient.get<ApiResponse<Wallpaper>>('/wallpapers/active');
-      return res.data.data;
-    }
+      try {
+        const res = await apiClient.get<ApiResponse<Wallpaper>>('/wallpapers/active');
+        return res.data.data;
+      } catch (err) {
+        if (err instanceof Error && 'response' in err) {
+          const axiosErr = err as { response?: { status: number } };
+          if (axiosErr.response?.status === 404) {
+            return null;
+          }
+        }
+        throw err;
+      }
+    },
+    retry: false,
   });
 }
 
