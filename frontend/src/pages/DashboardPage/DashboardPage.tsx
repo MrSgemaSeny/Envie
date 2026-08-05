@@ -46,6 +46,7 @@ export const DashboardPage: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const introRef = useRef<HTMLDivElement>(null);
   const activeSectionRef = useRef(-1);
 
   const setBlockRef = useCallback((el: HTMLDivElement | null, idx: number) => {
@@ -66,6 +67,12 @@ export const DashboardPage: React.FC = () => {
 
       // Progress bar
       progressEl.style.height = `${p * 100}%`;
+
+      // Fade out intro (disappears within first 5% of scroll)
+      if (introRef.current) {
+        const introOpacity = Math.max(0, 1 - p * 20);
+        introRef.current.style.opacity = String(introOpacity);
+      }
 
       // Find active section
       let newActive = -1;
@@ -141,6 +148,18 @@ export const DashboardPage: React.FC = () => {
                 />
               </div>
             ))}
+
+            {/* Intro block -- visible at scroll=0 */}
+            <div className="dash-intro" ref={introRef}>
+              <div className="dash-intro-eyebrow">Welcome to</div>
+              <div className="dash-intro-title">Envie</div>
+              <div className="dash-intro-sub">Your personal headquarters.<br />Scroll down to explore.</div>
+              <div className="dash-intro-chevron">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 8L10 13L15 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </div>
 
             {/* Progress bar */}
             <div className="dash-progress-bar">

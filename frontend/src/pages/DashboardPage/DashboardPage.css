@@ -144,3 +144,52 @@
 .dash-nav-link:hover {
   color: rgba(255, 255, 255, 0.7);
 }
+
+/* Intro block */
+.dash-intro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 0.15s ease-out;
+}
+
+.dash-intro-eyebrow {
+  font-family: 'JetBrains Mono', 'Geist Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 12px;
+}
+
+.dash-intro-title {
+  font-family: 'Space Grotesk', 'Geist Sans', sans-serif;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.dash-intro-sub {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.35);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.dash-intro-chevron {
+  color: rgba(255, 255, 255, 0.25);
+  animation: dash-chevron-bounce 2s ease-in-out infinite;
+}
+
+@keyframes dash-chevron-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.3; }
+  50% { transform: translateY(6px); opacity: 0.7; }
+}
+
