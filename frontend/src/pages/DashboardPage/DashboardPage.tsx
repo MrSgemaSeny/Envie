@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
@@ -8,17 +8,17 @@ import './DashboardPage.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const SECTIONS = [
-  { eyebrow: '01 — Notes', title: 'Лента\nзаметок', body: 'Заметки с тегами, медиа-вложениями и пином наверх. Быстрый захват мыслей без трения.', side: 'left' },
-  { eyebrow: '02 — Board', title: 'Канбан\nдоска', body: 'Задачи с подзадачами. Двигается, когда двигаешься ты.', side: 'right' },
-  { eyebrow: '03 — Ideas', title: 'База\nидей', body: 'Структурированное описание: проблема, решение, аудитория, монетизация.', side: 'left' },
-  { eyebrow: '04 — Templates', title: 'MD\nшаблоны', body: 'Готовые markdown-шаблоны и промпты для повторяющихся задач.', side: 'right' },
-  { eyebrow: '05 — Wallpaper', title: 'Свой\nфон', body: 'Загружай обои рабочего пространства, до 50MB. Переключай и удаляй в один клик.', side: 'left' },
-  { eyebrow: '06 — Dashboard', title: 'Точка\nвхода', body: 'Главный экран с навигацией по всем модулям. Всё в одном окне.', side: 'right' },
+  { eyebrow: '01 — Notes', title: 'Лента\n<em>заметок</em>', body: 'Твиттер-стиль лента с тегами, медиа и пином. Быстрый захват мыслей без трения. Хештеги группируют контекст автоматически. Поддерживает загрузку картинок, документов и любых других вложений для ведения полноценного журнала разработки.', side: 'left' },
+  { eyebrow: '02 — Board', title: 'Канбан\n<em>доска</em>', body: 'Список задач с подзадачами и чекбоксами. Двигается, когда двигаешься ты. Удобное отслеживание текущих спринтов без лишней бюрократии и сложных настроек Jira.', side: 'right' },
+  { eyebrow: '03 — Ideas', title: 'База\n<em>идей</em>', body: 'Структурированное описание ваших будущих стартапов: формулировка проблемы, предлагаемое решение, целевая аудитория и способы монетизация. Метрики ценности и фильтрация статусов помогают сфокусироваться на главном.', side: 'left' },
+  { eyebrow: '04 — Templates', title: 'MD\n<em>шаблоны</em>', body: 'Готовые markdown-шаблоны для повторяющихся процессов, чек-листов и промптов для языковых моделей. Встроенный редактор markdown с подсветкой синтаксиса и просмотром отрендеренного контента экономит часы работы.', side: 'right' },
+  { eyebrow: '05 — Wallpaper', title: 'Свой\n<em>фон</em>', body: 'Полная кастомизация внешнего вида вашего штаба. Загружайте любые фоновые изображения, анимированные GIF-файлы или закольцованные видеообои объемом до 50 МБ. Переключение в один клик с поддержкой эффекта glassmorphism.', side: 'left' },
+  { eyebrow: '06 — Dashboard', title: 'Точка\n<em>входа</em>', body: 'Главный экран с навигацией по всем модулям. Всё в одном окне. Статистика вашей базы знаний всегда перед глазами. Быстрые переходы во все рабочие пространства приложения.', side: 'right' },
 ];
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
-  
+
   // Show preloader only once per session
   const [showPreloader, setShowPreloader] = useState(() => {
     return !sessionStorage.getItem('dashboard-preloader-shown');
@@ -29,15 +29,13 @@ export const DashboardPage: React.FC = () => {
   const heroCanvasRef = useRef<HTMLCanvasElement>(null);
   const ladderCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Scroll Area Refs
-  const ladderScrollRef = useRef<HTMLDivElement>(null);
+  // Scroll and Counter Refs
   const ladderProgressFillRef = useRef<HTMLDivElement>(null);
-
-  // Counter Refs
   const factRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Navigation scroll state
-  const lastYRef = useRef(0);
+  // Carousel Refs
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Hold-to-blast State
   const [isHolding, setIsHolding] = useState(false);
@@ -49,7 +47,7 @@ export const DashboardPage: React.FC = () => {
 
   const CIRC = 2 * Math.PI * 22;
 
-  // Preloader and Hero entrance GSAP
+  // Preloader & Hero entrance sequence
   useEffect(() => {
     const delay = showPreloader ? 2100 : 100;
     const timer = setTimeout(() => {
@@ -57,41 +55,39 @@ export const DashboardPage: React.FC = () => {
       sessionStorage.setItem('dashboard-preloader-shown', 'true');
       setIsNavVisible(true);
 
-      // Hero animations
-      gsap.from('.hero-eyebrow', { opacity: 0, y: 20, duration: 0.8, delay: 0.1, ease: 'power3.out' });
-      gsap.from('.hero-title .line', { opacity: 0, y: 40, duration: 1, delay: 0.25, stagger: 0.12, ease: 'power3.out' });
-      gsap.from('.hero-sub', { opacity: 0, y: 20, duration: 0.8, delay: 0.55, ease: 'power3.out' });
-      gsap.from('.hero-hint', { opacity: 0, duration: 1, delay: 0.9, ease: 'power2.out' });
-      gsap.to('#hold-indicator', { opacity: 1, duration: 0.8, delay: 1.1, ease: 'power2.out' });
+      // Hero content animations
+      gsap.to('.hero-eyebrow', { opacity: 1, y: 0, duration: 0.8, delay: 0.1, ease: 'power3.out' });
+      gsap.to('.hero-title', { opacity: 1, y: 0, duration: 1, delay: 0.25, ease: 'power3.out' });
+      gsap.to('.hero-sub', { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: 'power3.out' });
+      gsap.to('.hero-hint', { opacity: 1, duration: 0.8, delay: 0.8, ease: 'power3.out' });
+      gsap.to('#hold-indicator', { opacity: 1, duration: 0.8, delay: 1, ease: 'power3.out' });
     }, delay);
 
     return () => clearTimeout(timer);
   }, [showPreloader]);
 
-  // Nav hide/show on scroll
+  // Nav scroll logic (tracks the scrollable main element)
   useEffect(() => {
+    const mainEl = document.querySelector('main');
+    const scrollTarget = mainEl || window;
+    
     const handleScroll = () => {
-      const y = window.scrollY;
+      const y = mainEl ? mainEl.scrollTop : window.scrollY;
       const nav = document.getElementById('main-nav');
       if (!nav) return;
 
-      if (y < 80) {
+      if (y > 80) {
         nav.classList.add('visible');
-        return;
-      }
-      if (y > lastYRef.current + 4) {
+      } else {
         nav.classList.remove('visible');
-      } else if (y < lastYRef.current - 4) {
-        nav.classList.add('visible');
       }
-      lastYRef.current = y;
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    scrollTarget.addEventListener('scroll', handleScroll, { passive: true });
+    return () => scrollTarget.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Three.js Hero Globe Canvas
+  // Three.js Hero Canvas: Wireframe Box, core, rings & particle field (as on Kimi page)
   useEffect(() => {
     const canvas = heroCanvasRef.current;
     if (!canvas) return;
@@ -99,94 +95,134 @@ export const DashboardPage: React.FC = () => {
     const W = () => canvas.parentElement?.clientWidth || window.innerWidth;
     const H = () => canvas.parentElement?.clientHeight || window.innerHeight;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    // Set alpha to true and clear opacity to 0 to show background wallpapers
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(W(), H());
-    renderer.setClearColor(0x0A0A0A, 1);
+    renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, W() / H(), 0.1, 200);
+    camera.position.set(0, 0, 12);
 
-    const cam = new THREE.PerspectiveCamera(36, W() / H(), 0.1, 100);
-    cam.position.set(2.0, 0, 3.0);
-    cam.lookAt(2.0, 0, 0);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+    const d1 = new THREE.DirectionalLight(0xffffff, 0.8);
+    d1.position.set(4, 4, 5);
+    scene.add(d1);
+    const d2 = new THREE.DirectionalLight(0x888888, 0.4);
+    d2.position.set(-4, -2, 3);
+    scene.add(d2);
 
-    // Star points
-    const pCount = 900;
-    const pPos = new Float32Array(pCount * 3);
-    for (let i = 0; i < pCount * 3; i++) {
-      pPos[i] = (Math.random() - 0.5) * 70;
+    // Particles
+    const PARTICLE_COUNT = 2500;
+    const pos = new Float32Array(PARTICLE_COUNT * 3);
+    const vel: { x: number; y: number; z: number }[] = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 40;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 40;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 30;
+      vel.push({
+        x: (Math.random() - 0.5) * 0.003,
+        y: (Math.random() - 0.5) * 0.003,
+        z: (Math.random() - 0.5) * 0.003,
+      });
     }
+
     const pGeo = new THREE.BufferGeometry();
-    pGeo.setAttribute('position', new THREE.Float32BufferAttribute(pPos, 3));
-    const pMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.045, transparent: true, opacity: 0.22 });
-    scene.add(new THREE.Points(pGeo, pMat));
+    pGeo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    const pMat = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.035,
+      transparent: true,
+      opacity: 0.35,
+      sizeAttenuation: true,
+    });
+    const particles = new THREE.Points(pGeo, pMat);
+    scene.add(particles);
 
-    const globeGroup = new THREE.Group();
-    globeGroup.position.set(2.0, 0, 0);
-    scene.add(globeGroup);
+    // Wireframe cube
+    const cubeGeo = new THREE.BoxGeometry(3.5, 3.5, 3.5, 8, 8, 8);
+    const edges = new THREE.EdgesGeometry(cubeGeo);
+    const cube = new THREE.LineSegments(
+      edges,
+      new THREE.LineBasicMaterial({ color: 0x333333, transparent: true, opacity: 0.4 })
+    );
+    scene.add(cube);
 
-    const R = 1;
-    const wireDim = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.13 });
-    const wireBright = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.42 });
+    // Glowing core
+    const coreGeo = new THREE.IcosahedronGeometry(0.6, 2);
+    const coreMat = new THREE.MeshStandardMaterial({
+      color: 0x222222,
+      emissive: 0xffffff,
+      emissiveIntensity: 0.15,
+      metalness: 0.9,
+      roughness: 0.2,
+      wireframe: true,
+    });
+    const core = new THREE.Mesh(coreGeo, coreMat);
+    scene.add(core);
 
-    // Latitude circles
-    for (let i = 0; i <= 18; i++) {
-      const lat = -90 + (180 / 18) * i;
-      const phi = ((90 - lat) * Math.PI) / 180;
-      const r = R * Math.sin(phi);
-      const y = R * Math.cos(phi);
-      const pts = [];
-      for (let j = 0; j <= 72; j++) {
-        const t = (j / 72) * Math.PI * 2;
-        pts.push(new THREE.Vector3(r * Math.cos(t), y, r * Math.sin(t)));
-      }
-      globeGroup.add(new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints(pts),
-        lat === 0 ? wireBright : wireDim
-      ));
+    // Torus Rings
+    const rings: THREE.Mesh[] = [];
+    for (let i = 0; i < 3; i++) {
+      const rGeo = new THREE.TorusGeometry(1.2 + i * 0.6, 0.008, 8, 64);
+      const rMat = new THREE.MeshBasicMaterial({ color: 0x444444, transparent: true, opacity: 0.25 });
+      const ring = new THREE.Mesh(rGeo, rMat);
+      ring.rotation.x = Math.random() * Math.PI;
+      ring.rotation.y = Math.random() * Math.PI;
+      rings.push(ring);
+      scene.add(ring);
     }
-
-    // Longitude circles
-    for (let i = 0; i < 24; i++) {
-      const theta = (i / 24) * Math.PI * 2;
-      const pts = [];
-      for (let j = 0; j <= 64; j++) {
-        const phi = (j / 64) * Math.PI;
-        pts.push(new THREE.Vector3(
-          R * Math.sin(phi) * Math.cos(theta),
-          R * Math.cos(phi),
-          R * Math.sin(phi) * Math.sin(theta)
-        ));
-      }
-      globeGroup.add(new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints(pts),
-        i === 0 || i === 12 ? wireBright : wireDim
-      ));
-    }
-
-    // Occulusion sphere
-    globeGroup.add(new THREE.Mesh(
-      new THREE.SphereGeometry(R * 0.994, 1, 1),
-      new THREE.MeshBasicMaterial({ color: 0x0A0A0A, side: THREE.BackSide })
-    ));
 
     const onResize = () => {
       renderer.setSize(W(), H());
-      cam.aspect = W() / H();
-      cam.updateProjectionMatrix();
+      camera.aspect = W() / H();
+      camera.updateProjectionMatrix();
     };
-
     window.addEventListener('resize', onResize);
 
-    let ry = 0;
     let frameId = 0;
-    const tick = () => {
-      frameId = requestAnimationFrame(tick);
-      ry += 0.0012;
-      globeGroup.rotation.y = ry;
-      renderer.render(scene, cam);
+    const animateHero = () => {
+      frameId = requestAnimationFrame(animateHero);
+      const t = performance.now() * 0.001;
+
+      // Particle Drift
+      const positions = pGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        positions[i * 3] += vel[i].x + Math.sin(t + i) * 0.0003;
+        positions[i * 3 + 1] += vel[i].y + Math.cos(t + i * 0.7) * 0.0003;
+        positions[i * 3 + 2] += vel[i].z;
+        if (Math.abs(positions[i * 3]) > 20) positions[i * 3] *= -0.5;
+        if (Math.abs(positions[i * 3 + 1]) > 20) positions[i * 3 + 1] *= -0.5;
+        if (Math.abs(positions[i * 3 + 2]) > 15) positions[i * 3 + 2] *= -0.5;
+      }
+      pGeo.attributes.position.needsUpdate = true;
+
+      // Cube Rotation
+      cube.rotation.x = t * 0.08;
+      cube.rotation.y = t * 0.12;
+
+      // Core scale pulse
+      const pulse = 1 + Math.sin(t * 1.5) * 0.08;
+      core.scale.set(pulse, pulse, pulse);
+      core.rotation.x = t * 0.3;
+      core.rotation.y = t * 0.2;
+      coreMat.emissiveIntensity = 0.1 + Math.sin(t * 2) * 0.05;
+
+      // Rings
+      rings.forEach((r, idx) => {
+        r.rotation.x += 0.002 * (idx + 1);
+        r.rotation.y += 0.003 * (idx + 1);
+      });
+
+      // Camera drift
+      camera.position.x = Math.sin(t * 0.2) * 0.5;
+      camera.position.y = Math.cos(t * 0.15) * 0.3;
+      camera.lookAt(0, 0, 0);
+
+      renderer.render(scene, camera);
     };
-    tick();
+    animateHero();
 
     return () => {
       window.removeEventListener('resize', onResize);
@@ -195,41 +231,49 @@ export const DashboardPage: React.FC = () => {
       renderer.dispose();
       pGeo.dispose();
       pMat.dispose();
-      wireDim.dispose();
-      wireBright.dispose();
+      cubeGeo.dispose();
+      edges.dispose();
+      coreGeo.dispose();
+      coreMat.dispose();
     };
   }, []);
 
-  // Three.js Scroll Ladder Canvas and scroll syncing
+  // Three.js Scroll Helix Canvas & scroll synchronization across sections (No nested scrollbars)
   useEffect(() => {
     const canvas = ladderCanvasRef.current;
-    const scrollArea = ladderScrollRef.current;
-    if (!canvas || !scrollArea) return;
+    if (!canvas) return;
 
-    const W = () => canvas.parentElement?.clientWidth || scrollArea.clientWidth;
-    const H = () => canvas.parentElement?.clientHeight || scrollArea.clientHeight;
+    const mainEl = document.querySelector('main');
+    if (!mainEl) return;
+
+    const W = () => canvas.parentElement?.clientWidth || window.innerWidth;
+    const H = () => canvas.parentElement?.clientHeight || window.innerHeight;
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(W(), H());
-    renderer.setClearColor(0x0A0A0A, 1);
+    renderer.setClearColor(0x000000, 0); // Transparent to blend with dashboard backgrounds
 
     const scene = new THREE.Scene();
     const cam = new THREE.PerspectiveCamera(50, W() / H(), 0.1, 200);
     cam.position.set(0, 0, 14);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.12));
-    const dL = new THREE.DirectionalLight(0xffffff, 0.9);
-    dL.position.set(5, 5, 5);
-    scene.add(dL);
+    const dl1 = new THREE.DirectionalLight(0xffffff, 0.9);
+    dl1.position.set(5, 5, 5);
+    scene.add(dl1);
+    const dl2 = new THREE.DirectionalLight(0x666666, 0.5);
+    dl2.position.set(-5, -3, 2);
+    scene.add(dl2);
 
     const STEPS = 40;
-    const RADIUS = 1.8;
-    const HEIGHT = 28;
-    const TURNS = 2.5;
+    const RADIUS = 2.0;
+    const HEIGHT = 30;
+    const TURNS = 2.8;
     const ladderGroup = new THREE.Group();
     scene.add(ladderGroup);
 
+    // Rails
     const rail1pts = [];
     const rail2pts = [];
     for (let i = 0; i <= STEPS * 4; i++) {
@@ -239,53 +283,57 @@ export const DashboardPage: React.FC = () => {
       rail1pts.push(new THREE.Vector3(Math.cos(angle) * RADIUS, y, Math.sin(angle) * RADIUS));
       rail2pts.push(new THREE.Vector3(Math.cos(angle + Math.PI) * RADIUS, y, Math.sin(angle + Math.PI) * RADIUS));
     }
-    const railMat = new THREE.LineBasicMaterial({ color: 0x333333 });
+    const railMat = new THREE.LineBasicMaterial({ color: 0x2a2a2a });
     ladderGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(rail1pts), railMat));
     ladderGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(rail2pts), railMat));
 
-    const rungGeo = new THREE.CylinderGeometry(0.04, 0.04, RADIUS * 2, 8);
+    // Rungs
+    const rungMatBase = new THREE.MeshStandardMaterial({ color: 0x151515, metalness: 0.7, roughness: 0.25 });
+    const rungGeo = new THREE.CylinderGeometry(0.035, 0.035, RADIUS * 2, 8);
+    const rungs: { mesh: THREE.Mesh; idx: number }[] = [];
     for (let i = 0; i < STEPS; i++) {
       const t = i / STEPS;
       const angle = t * Math.PI * 2 * TURNS;
       const y = (t - 0.5) * HEIGHT;
-      const rung = new THREE.Mesh(
-        rungGeo,
-        new THREE.MeshStandardMaterial({ color: 0x1a1a1a, metalness: 0.7, roughness: 0.3 })
-      );
+      const rung = new THREE.Mesh(rungGeo, rungMatBase.clone());
       rung.position.set(0, y, 0);
       rung.rotation.z = Math.PI / 2;
       rung.rotation.y = angle;
       ladderGroup.add(rung);
+      rungs.push({ mesh: rung, idx: i });
     }
 
-    const nodeGeo = new THREE.SphereGeometry(0.12, 12, 12);
+    // Nodes
+    const nodeGeo = new THREE.SphereGeometry(0.1, 10, 10);
+    const nodeMatBase = new THREE.MeshStandardMaterial({
+      color: 0x333333,
+      emissive: 0x222222,
+      emissiveIntensity: 0.3,
+      metalness: 0.3,
+      roughness: 0.3,
+    });
     for (let i = 0; i < STEPS; i++) {
       const t = i / STEPS;
       const angle = t * Math.PI * 2 * TURNS;
       const y = (t - 0.5) * HEIGHT;
       [-1, 1].forEach(side => {
-        const n = new THREE.Mesh(
-          nodeGeo,
-          new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xaaaaaa, emissiveIntensity: 0.3, metalness: 0.2, roughness: 0.3 })
-        );
         const a2 = angle + (side === 1 ? Math.PI : 0);
+        const n = new THREE.Mesh(nodeGeo, nodeMatBase.clone());
         n.position.set(Math.cos(a2) * RADIUS, y, Math.sin(a2) * RADIUS);
         ladderGroup.add(n);
       });
     }
 
-    // Spine
-    ladderGroup.add(new THREE.Mesh(
-      new THREE.CylinderGeometry(0.015, 0.015, HEIGHT, 8),
-      new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x888888, emissiveIntensity: 0.3 })
-    ));
+    // Central spine
+    const spineGeo = new THREE.CylinderGeometry(0.012, 0.012, HEIGHT, 8);
+    const spineMat = new THREE.MeshStandardMaterial({ color: 0x444444, emissive: 0x222222, emissiveIntensity: 0.2 });
+    ladderGroup.add(new THREE.Mesh(spineGeo, spineMat));
 
     // Stars background
-    const sPos = new Float32Array(1500).map(() => (Math.random() - 0.5) * 120);
-    const sGeo = new THREE.BufferGeometry();
-    sGeo.setAttribute('position', new THREE.Float32BufferAttribute(sPos, 3));
-    const sMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.18 });
-    scene.add(new THREE.Points(sGeo, sMat));
+    const starPos = new Float32Array(2000).map(() => (Math.random() - 0.5) * 100);
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
+    scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.03, transparent: true, opacity: 0.3 })));
 
     let scrollP = 0;
     let targetP = 0;
@@ -293,70 +341,50 @@ export const DashboardPage: React.FC = () => {
     let targetCamY = 0;
     let ladderRot = 0;
     let targetLadderRot = 0;
-    let activeSection = -1;
 
     const onScroll = () => {
-      const { scrollTop: st, scrollHeight: sh, clientHeight: ch } = scrollArea;
-      targetP = st / (sh - ch);
-      targetLadderRot = targetP * Math.PI * 4;
-      targetCamY = targetP * HEIGHT * 0.6 - HEIGHT * 0.3;
-    };
+      const st = mainEl.scrollTop;
+      const sh = mainEl.scrollHeight;
+      const ch = mainEl.clientHeight;
 
-    scrollArea.addEventListener('scroll', onScroll, { passive: true });
+      // Sizing boundaries: Helix starts active after the Hero section, and finishes before the work/footer gallery.
+      const startScroll = ch * 0.8;
+      const endScroll = sh - ch * 1.5;
 
-    const secPoints = SECTIONS.map((_, i) => (i + 0.5) / SECTIONS.length);
+      let p = (st - startScroll) / (endScroll - startScroll);
+      p = Math.max(0, Math.min(1, p));
 
-    const updateTextBlocks = (p: number) => {
-      let newActive = -1;
-      secPoints.forEach((sp, i) => {
-        if (Math.abs(p - sp) < 0.12) newActive = i;
-      });
+      targetP = p;
+      targetLadderRot = p * Math.PI * 5;
+      targetCamY = p * HEIGHT * 0.6 - HEIGHT * 0.3;
 
-      if (newActive !== activeSection) {
-        if (activeSection >= 0) {
-          const el = document.getElementById('ltb' + activeSection);
-          if (el) {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(-50%)';
-          }
+      // Handle transparent fade visibility
+      const container = document.getElementById('ladder-container-fixed');
+      if (container) {
+        if (st > startScroll - 100 && st < sh - ch * 1.2) {
+          container.style.opacity = '1';
+        } else {
+          container.style.opacity = '0';
         }
-        if (newActive >= 0) {
-          const el = document.getElementById('ltb' + newActive);
-          const s = SECTIONS[newActive];
-          if (el) {
-            el.style.transition = 'none';
-            el.style.opacity = '0';
-            el.style.transform = `translateY(-50%) translateX(${s.side === 'left' ? '-30px' : '30px'})`;
-            requestAnimationFrame(() => {
-              el.style.transition = 'opacity .5s ease, transform .5s ease';
-              el.style.opacity = '1';
-              el.style.transform = 'translateY(-50%) translateX(0)';
-            });
-          }
-        }
-        activeSection = newActive;
       }
     };
 
+    mainEl.addEventListener('scroll', onScroll, { passive: true });
+
     const highlightRungs = (p: number) => {
       const centerIdx = Math.floor(p * STEPS);
-      let rIdx = 0;
-      ladderGroup.children.forEach(c => {
-        const mesh = c as THREE.Mesh;
-        if (
-          mesh.isMesh &&
-          mesh.geometry.type === 'CylinderGeometry' &&
-          (mesh.geometry as THREE.CylinderGeometry).parameters &&
-          (mesh.geometry as THREE.CylinderGeometry).parameters.radiusTop === 0.04
-        ) {
-          const dist = Math.abs(rIdx - centerIdx);
-          const glow = Math.max(0, 1 - dist * 0.4);
-          const mat = mesh.material as THREE.MeshStandardMaterial;
-          mat.color.setHex(glow > 0.3 ? 0xffffff : 0x222222);
-          mat.emissive = mat.emissive || new THREE.Color();
-          mat.emissive.setHex(glow > 0.3 ? 0xaaaaaa : 0x000000);
+      rungs.forEach(({ mesh, idx }) => {
+        const dist = Math.abs(idx - centerIdx);
+        const glow = Math.max(0, 1 - dist * 0.35);
+        const mat = mesh.material as THREE.MeshStandardMaterial;
+        if (glow > 0.25) {
+          mat.color.setHex(0x555555);
+          mat.emissive = new THREE.Color(0x333333);
           mat.emissiveIntensity = glow * 0.5;
-          rIdx++;
+        } else {
+          mat.color.setHex(0x151515);
+          mat.emissive = new THREE.Color(0x000000);
+          mat.emissiveIntensity = 0;
         }
       });
     };
@@ -366,48 +394,53 @@ export const DashboardPage: React.FC = () => {
       cam.aspect = W() / H();
       cam.updateProjectionMatrix();
     };
-
     window.addEventListener('resize', onResize);
 
     let time = 0;
     let frameId = 0;
-    const tick = () => {
-      frameId = requestAnimationFrame(tick);
-      time += 0.01;
+    const animateLadder = () => {
+      frameId = requestAnimationFrame(animateLadder);
+      time += 0.008;
+
       scrollP += (targetP - scrollP) * 0.08;
       camY += (targetCamY - camY) * 0.06;
       ladderRot += (targetLadderRot - ladderRot) * 0.06;
+
       cam.position.y = camY;
-      cam.position.x = Math.sin(time * 0.3) * 0.3;
+      cam.position.x = Math.sin(time * 0.25) * 0.25;
       cam.lookAt(0, camY, 0);
-      ladderGroup.rotation.y = ladderRot + time * 0.05;
-      
+
+      ladderGroup.rotation.y = ladderRot + time * 0.04;
+
       const progressFill = ladderProgressFillRef.current;
       if (progressFill) {
         progressFill.style.height = scrollP * 100 + '%';
       }
 
-      updateTextBlocks(scrollP);
       highlightRungs(scrollP);
       renderer.render(scene, cam);
     };
-    tick();
+    animateLadder();
+
+    // Trigger initial calculation
+    onScroll();
 
     return () => {
       window.removeEventListener('resize', onResize);
-      scrollArea.removeEventListener('scroll', onScroll);
+      mainEl.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(frameId);
       scene.clear();
       renderer.dispose();
-      sGeo.dispose();
-      sMat.dispose();
       railMat.dispose();
       rungGeo.dispose();
       nodeGeo.dispose();
+      spineGeo.dispose();
+      spineMat.dispose();
+      starGeo.dispose();
     };
   }, []);
 
-  // IntersectionObserver for counting facts in #about section
+  // IntersectionObserver for facts counting
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -424,7 +457,7 @@ export const DashboardPage: React.FC = () => {
               clearInterval(timer);
             }
             el.textContent = String(Math.floor(current));
-          }, 22);
+          }, 25);
           observer.unobserve(el);
         });
       },
@@ -438,31 +471,122 @@ export const DashboardPage: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // GSAP ScrollTrigger Animations
+  // GSAP animations for text fading and sliding (fades blocks based on scroll triggers)
   useEffect(() => {
-    const triggers = [
-      gsap.from('#about .about-label', { scrollTrigger: { trigger: '#about', start: 'top 80%' }, opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' }),
-      gsap.from('#about .about-title', { scrollTrigger: { trigger: '#about', start: 'top 75%' }, opacity: 0, y: 30, duration: 1, ease: 'power3.out' }),
-      gsap.from('#about .about-body p', { scrollTrigger: { trigger: '#about', start: 'top 70%' }, opacity: 0, y: 20, duration: 0.8, stagger: 0.15, ease: 'power3.out' }),
-      gsap.from('#about .fact-item', { scrollTrigger: { trigger: '.about-facts', start: 'top 85%' }, opacity: 0, y: 30, duration: 0.7, stagger: 0.12, ease: 'power3.out' }),
-      gsap.from('#tech .tech-label', { scrollTrigger: { trigger: '#tech', start: 'top 80%' }, opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' }),
-      gsap.from('#tech .tech-title', { scrollTrigger: { trigger: '#tech', start: 'top 75%' }, opacity: 0, y: 30, duration: 1, ease: 'power3.out' }),
-      gsap.from('#tech .tech-card', { scrollTrigger: { trigger: '.tech-grid', start: 'top 80%' }, opacity: 0, y: 40, duration: 0.7, stagger: 0.1, ease: 'power3.out' }),
-      gsap.from('#architecture .tech-label', { scrollTrigger: { trigger: '#architecture', start: 'top 80%' }, opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' }),
-      gsap.from('#architecture .tech-title', { scrollTrigger: { trigger: '#architecture', start: 'top 75%' }, opacity: 0, y: 30, duration: 1, ease: 'power3.out' }),
-      gsap.from('#architecture .arch-mod', { scrollTrigger: { trigger: '.arch-modules', start: 'top 85%' }, opacity: 0, x: -20, duration: 0.6, stagger: 0.08, ease: 'power3.out' }),
-      gsap.from('#architecture .arch-fact', { scrollTrigger: { trigger: '.arch-facts', start: 'top 85%' }, opacity: 0, y: 20, duration: 0.7, stagger: 0.12, ease: 'power3.out' }),
-      gsap.from('#work .work-header', { scrollTrigger: { trigger: '#work', start: 'top 80%' }, opacity: 0, y: 30, duration: 0.9, ease: 'power3.out' }),
-      gsap.from('.work-card', { scrollTrigger: { trigger: '#work-gallery', start: 'top 80%' }, opacity: 0, y: 50, duration: 0.8, stagger: 0.1, ease: 'power3.out' }),
-      gsap.from('#footer .footer-cta', { scrollTrigger: { trigger: '#footer', start: 'top 80%' }, opacity: 0, y: 30, duration: 1, ease: 'power3.out' }),
-    ];
+    const triggers: ScrollTrigger[] = [];
+
+    // Fact / about items
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: '#about',
+        start: 'top 80%',
+        onEnter: () => {
+          gsap.from('#about .about-label', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' });
+          gsap.from('#about .about-title', { opacity: 0, y: 30, duration: 1, ease: 'power3.out' });
+          gsap.from('#about .about-body p', { opacity: 0, y: 20, duration: 0.8, stagger: 0.15, ease: 'power3.out' });
+          gsap.from('#about .fact-item', { opacity: 0, y: 30, duration: 0.7, stagger: 0.12, ease: 'power3.out' });
+        },
+        once: true
+      })
+    );
+
+    // Feature Blocks
+    SECTIONS.forEach((_, i) => {
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: `#tb-${i}`,
+          start: 'top 85%',
+          onEnter: () => {
+            gsap.fromTo(
+              `#tb-${i} .feature-text-block`,
+              { opacity: 0, x: SECTIONS[i].side === 'left' ? -40 : 40 },
+              { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out' }
+            );
+          },
+          once: true
+        })
+      );
+    });
+
+    // Tech Stack grid
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: '#tech',
+        start: 'top 80%',
+        onEnter: () => {
+          gsap.from('#tech .tech-label', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' });
+          gsap.from('#tech .tech-title', { opacity: 0, y: 30, duration: 1, ease: 'power3.out' });
+          gsap.from('#tech .tech-card', { opacity: 0, y: 40, duration: 0.7, stagger: 0.1, ease: 'power3.out' });
+        },
+        once: true
+      })
+    );
+
+    // Work cards header
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: '#work',
+        start: 'top 80%',
+        onEnter: () => {
+          gsap.from('#work .work-header', { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out' });
+          gsap.from('.work-card', { opacity: 0, y: 50, duration: 0.8, stagger: 0.1, ease: 'power3.out' });
+        },
+        once: true
+      })
+    );
 
     return () => {
-      triggers.forEach(t => t.scrollTrigger?.kill());
+      triggers.forEach(t => t.kill());
     };
   }, []);
 
-  // Hold-to-blast Handlers
+  // 3D Carousel gallery positioning & floating animation
+  useEffect(() => {
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+
+    const positionCards = () => {
+      const cx = gallery.clientWidth / 2;
+      const cy = 260;
+      cardRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const angle = (i / cardRefs.current.length) * Math.PI * 2;
+        const rx = Math.min(380, gallery.clientWidth * 0.28);
+        const ry = 140;
+        const x = cx + Math.cos(angle) * rx - el.offsetWidth / 2;
+        const y = cy + Math.sin(angle) * ry - el.offsetHeight / 2;
+        const z = Math.sin(angle) * 80;
+        const rotY = Math.cos(angle) * 8;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.transform = `translateZ(${z}px) rotateY(${rotY}deg)`;
+      });
+    };
+
+    positionCards();
+    window.addEventListener('resize', positionCards);
+
+    let floatT = 0;
+    let frameId = 0;
+    const floatCards = () => {
+      floatT += 0.003;
+      cardRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const offset = Math.sin(floatT + i * 1.2) * 12;
+        const base = el.style.transform.replace(/translateY\([^)]*\)/g, '').trim();
+        el.style.transform = base + ` translateY(${offset}px)`;
+      });
+      frameId = requestAnimationFrame(floatCards);
+    };
+    floatCards();
+
+    return () => {
+      window.removeEventListener('resize', positionCards);
+      cancelAnimationFrame(frameId);
+    };
+  }, []);
+
+  // Hold-to-blast timer & progress loops
   const startHold = () => {
     if (blastedRef.current) return;
     holdingRef.current = true;
@@ -498,7 +622,7 @@ export const DashboardPage: React.FC = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     document.body.appendChild(canvas);
-    
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -540,25 +664,24 @@ export const DashboardPage: React.FC = () => {
     setTimeout(() => {
       blastedRef.current = false;
       setBlastProgress(0);
-      navigate('/notes'); // Redirect to Feed on completion!
+      navigate('/notes');
     }, 1500);
   };
 
   const cardsData = [
-    { tag: 'Notes', title: 'Feed', desc: 'Заметки с тегами, медиа-вложениями и пином.', icon: <path d="M4 4h16v4H4zM4 10h16M4 14h16M4 18h10" /> },
-    { tag: 'Board', title: 'Kanban', desc: 'Задачи с подзадачами. Просто работает.', icon: <><rect x="3" y="4" width="6" height="16" rx="1" /><rect x="9.5" y="4" width="6" height="10" rx="1" /><rect x="16" y="4" width="6" height="13" rx="1" /></> },
-    { tag: 'Ideas', title: 'Ideas Hub', desc: 'Структурированные идеи со статусами и метриками.', icon: <><circle cx="12" cy="9" r="6" /><path d="M9.5 20h5M10 17h4" /></> },
-    { tag: 'Templates', title: 'MD Templates', desc: 'Готовые markdown-шаблоны для повторяющихся задач.', icon: <><path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" /><path d="M14 3v5h5M9 13h6M9 16.5h6" /></> },
-    { tag: 'Wallpaper', title: 'Wallpapers', desc: 'Кастомные обои рабочего пространства, до 50MB.', icon: <><rect x="3" y="4" width="18" height="14" rx="1" /><circle cx="8.5" cy="9" r="1.5" /><path d="M3 15l5-5 4 4 3-3 6 6" /></> },
-    { tag: 'Dashboard', title: 'Home', desc: 'Главный экран с навигацией по всем модулям.', icon: <><rect x="3" y="3" width="8" height="8" rx="1" /><rect x="13" y="3" width="8" height="5" rx="1" /><rect x="13" y="10" width="8" height="11" rx="1" /><rect x="3" y="13" width="8" height="8" rx="1" /></> },
+    { tag: 'Notes', title: 'Feed', desc: 'Лента заметок с тегами, медиа и пином. Быстрый захват мыслей.', icon: <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /> },
+    { tag: 'Board', title: 'Kanban', desc: 'Задачи с подзадачами и чекбоксами. Просто работает.', icon: <><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="15" y1="3" x2="15" y2="21" /><line x1="3" y1="9" x2="21" y2="9" /></> },
+    { tag: 'Ideas', title: 'Ideas Hub', desc: 'Структурированные идеи со статусами и метриками.', icon: <><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5" /><path d="M9 18h6M10 22h4" /></> },
+    { tag: 'Templates', title: 'MD Templates', desc: 'Готовые markdown-шаблоны для повторяющихся задач.', icon: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></> },
+    { tag: 'Dashboard', title: 'Home', desc: 'Главный экран с навигацией по всем модулям.', icon: <><rect x="3" y="3" width="7" height="9" /><rect x="14" y="3" width="7" height="5" /><rect x="14" y="12" width="7" height="9" /><rect x="3" y="16" width="7" height="5" /></> },
   ];
 
   return (
-    <div className="landing-root-container">
+    <div className="dashboard-root-container">
       {/* PRELOADER */}
       {showPreloader && (
         <div id="preloader">
-          <div id="preloader-text">Envie</div>
+          <div id="preloader-text">Envie Loading</div>
           <div id="preloader-line"></div>
         </div>
       )}
@@ -570,7 +693,6 @@ export const DashboardPage: React.FC = () => {
           <a href="#about">О проекте</a>
           <a href="#ladder-section">Фичи</a>
           <a href="#tech">Стек</a>
-          <a href="#architecture">Архитектура</a>
           <a href="#work">Интерфейс</a>
           <button 
             onClick={() => navigate('/notes')} 
@@ -584,19 +706,17 @@ export const DashboardPage: React.FC = () => {
 
       {/* HERO */}
       <section id="hero">
-        <div id="globe-wrap">
-          <canvas id="hero-canvas" ref={heroCanvasRef}></canvas>
-        </div>
+        <canvas id="hero-canvas" ref={heroCanvasRef}></canvas>
         <div id="hero-content">
-          <div className="hero-eyebrow">Локальный штаб для соло-разработчика</div>
-          <h1 className="hero-title">
+          <div className="hero-eyebrow" style={{ opacity: 0, transform: 'translateY(20px)' }}>Локальный штаб для соло-разработчика</div>
+          <h1 className="hero-title" style={{ opacity: 0, transform: 'translateY(30px)' }}>
             <span className="line">Personal</span>
             <span className="line"><em>Headquarters.</em></span>
           </h1>
-          <p className="hero-sub">Notes · Board · Ideas — всё в одном месте.<br />Без облака. Без авторизации. Без лишнего.</p>
-          <div className="hero-hint">Scroll to explore</div>
+          <p className="hero-sub" style={{ opacity: 0, transform: 'translateY(20px)' }}>Notes · Board · Ideas — всё в одном месте. Без облака. Без авторизации. Без лишнего.</p>
+          <div className="hero-hint" style={{ opacity: 0 }}>Scroll to explore</div>
         </div>
-        <div id="hold-indicator">
+        <div id="hold-indicator" style={{ opacity: 0 }}>
           <div 
             id="hold-ring" 
             className={isHolding ? 'active' : ''}
@@ -607,9 +727,8 @@ export const DashboardPage: React.FC = () => {
             onTouchEnd={stopHold}
           >
             <svg width="52" height="52" viewBox="0 0 52 52">
-              <circle id="hold-ring-bg" cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+              <circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
               <circle 
-                id="hold-ring-progress" 
                 cx="26" 
                 cy="26" 
                 r="22" 
@@ -634,7 +753,7 @@ export const DashboardPage: React.FC = () => {
         </h2>
         <div className="about-body">
           <p>Envie создан для соло-разработчиков, которые ценят контроль над своими данными. Все заметки, задачи и идеи хранятся локально — никаких облаков, никакой авторизации, никаких подписок.</p>
-          <p>Заметки с тегами, медиа и пином, канбан-доска с подзадачами, база идей со статусами, MD-шаблоны, кастомные обои рабочего пространства и дашборд — всё это работает из одного окна.</p>
+          <p>Лента заметок в стиле твиттера, канбан-доска с подзадачами, база идей с AI-генерацией архитектуры, MD-шаблоны и страница обоев — всё это работает из одного окна.</p>
         </div>
         <div className="about-facts">
           <div className="fact-item">
@@ -652,50 +771,42 @@ export const DashboardPage: React.FC = () => {
         </div>
       </section>
 
-      {/* LADDER / SPIRAL */}
-      <section id="ladder-section">
-        <div id="ladder-root" ref={ladderScrollRef}>
-          <div id="ladder-scroll-area">
-            <div id="ladder-scroll-inner">
-              <div id="ladder-sticky">
-                <canvas id="ladder-canvas" ref={ladderCanvasRef}></canvas>
-                <div id="ladder-progress">
-                  <div id="ladder-progress-fill" ref={ladderProgressFillRef}></div>
-                </div>
-                <div id="ladder-hint">Scroll</div>
-                {SECTIONS.map((s, i) => (
-                  <div 
-                    key={i} 
-                    className="ladder-text-block" 
-                    id={'ltb' + i} 
-                    style={{
-                      left: s.side === 'left' ? '48px' : 'auto',
-                      right: s.side === 'right' ? '48px' : 'auto',
-                      opacity: 0
-                    }}
-                  >
-                    <div className="eyebrow">{s.eyebrow}</div>
-                    <h2>
-                      {s.title.split('\n')[0]}<br />
-                      <em>{s.title.split('\n')[1]}</em>
-                    </h2>
-                    <p>{s.body}</p>
-                  </div>
-                ))}
-              </div>
+      {/* FIXED HELIX SCROLL LADDER BACKGROUND CONTAINER */}
+      <div className="ladder-container-fixed" id="ladder-container-fixed">
+        <canvas id="ladder-canvas" ref={ladderCanvasRef}></canvas>
+        <div id="ladder-progress">
+          <div id="ladder-progress-fill" ref={ladderProgressFillRef}></div>
+        </div>
+      </div>
+
+      {/* LADDER SCROLL ROW MODULES */}
+      <section className="features-scroll-wrapper" id="ladder-section">
+        {SECTIONS.map((s, i) => (
+          <div 
+            key={i} 
+            className="feature-section-row"
+            id={`tb-${i}`}
+            style={{
+              justifyContent: s.side === 'left' ? 'flex-start' : 'flex-end',
+            }}
+          >
+            <div className="feature-text-block" style={{ opacity: 0 }}>
+              <div className="eyebrow">{s.eyebrow}</div>
+              <h2 dangerouslySetInnerHTML={{ __html: s.title.replace(/\n/g, '<br>') }} />
+              <p>{s.body}</p>
             </div>
           </div>
-        </div>
+        ))}
       </section>
 
-      {/* TECH */}
+      {/* TECH STACK */}
       <section id="tech">
         <div className="tech-label">Технологии</div>
         <h2 className="tech-title">Built with <span>clarity.</span></h2>
         <div className="tech-grid">
           <div className="tech-card">
             <h3>Backend</h3>
-            <p>Java 21 + Spring Boot 3. REST API с чёткой структурой, Flyway-миграции, PostgreSQL. Всё предсказуемо.</p>
+            <p>Java 21 + Spring Boot 3. REST API с чёткой структурой, Flyway-миграции, PostgreSQL. Всё предсказуемо и масштабируемо.</p>
             <div className="stack-list">
               <span className="stack-tag">Java 21</span>
               <span className="stack-tag">Spring Boot 3</span>
@@ -706,7 +817,7 @@ export const DashboardPage: React.FC = () => {
           </div>
           <div className="tech-card">
             <h3>Frontend</h3>
-            <p>React 19 + TypeScript + Vite. FSD-архитектура, TanStack Query, Tailwind CSS v4. Быстро, типизировано.</p>
+            <p>React 19 + TypeScript + Vite. FSD-архитектура, TanStack Query для состояния, Tailwind CSS v4 для стилей. Быстро, типизировано, поддерживаемо.</p>
             <div className="stack-list">
               <span className="stack-tag">React 19</span>
               <span className="stack-tag">TypeScript</span>
@@ -717,7 +828,7 @@ export const DashboardPage: React.FC = () => {
           </div>
           <div className="tech-card">
             <h3>Architecture</h3>
-            <p>Feature-Sliced Design разделяет код на слои: entities, features, widgets, pages. Каждый модуль изолирован.</p>
+            <p>Feature-Sliced Design разделяет код на слои: entities, features, widgets, pages. Каждый модуль изолирован и переиспользуем.</p>
             <div className="stack-list">
               <span className="stack-tag">FSD</span>
               <span className="stack-tag">Modular</span>
@@ -726,7 +837,7 @@ export const DashboardPage: React.FC = () => {
           </div>
           <div className="tech-card">
             <h3>Data</h3>
-            <p>Всё локально. Файлы до 50MB через Multipart upload. Zero-knowledge подход — данные принадлежат только вам.</p>
+            <p>Всё локально. Файлы до 50MB через Multipart upload. Zero-knowledge подход — ваши данные принадлежат только вам.</p>
             <div className="stack-list">
               <span className="stack-tag">Local First</span>
               <span className="stack-tag">Zero Cloud</span>
@@ -736,36 +847,19 @@ export const DashboardPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ARCHITECTURE */}
-      <section id="architecture">
-        <div className="tech-label">Как устроено</div>
-        <h2 className="tech-title">Modular by <span>design.</span></h2>
-        <div className="arch-intro">
-          <p>Каждый модуль на бэкенде — изолированный пакет: свой контроллер, сервис, репозиторий и сущность. Без общего God-объекта, без скрытых связей между доменами.</p>
-        </div>
-        <div className="arch-modules">
-          <div className="arch-mod"><span className="arch-mod-name">notes</span><span className="arch-chain">controller → service → repository → entity</span></div>
-          <div className="arch-mod"><span className="arch-mod-name">board</span><span className="arch-chain">controller → service → repository → entity</span></div>
-          <div className="arch-mod"><span className="arch-mod-name">ideas</span><span className="arch-chain">controller → service → repository → entity</span></div>
-          <div className="arch-mod"><span className="arch-mod-name">templates</span><span className="arch-chain">controller → service → entity</span></div>
-          <div className="arch-mod"><span className="arch-mod-name">wallpaper</span><span className="arch-chain">controller → service → repository → entity</span></div>
-        </div>
-        <div className="arch-facts">
-          <div className="arch-fact"><span className="arch-fact-num">6</span><span className="arch-fact-label">Flyway-миграций,<br />по одной на модуль</span></div>
-          <div className="arch-fact"><span className="arch-fact-num">0</span><span className="arch-fact-label">Внешних AI-сервисов —<br />убраны из архитектуры</span></div>
-          <div className="arch-fact"><span className="arch-fact-num">1</span><span className="arch-fact-label">Origin в CORS —<br />только localhost</span></div>
-        </div>
-      </section>
-
-      {/* WORK / FLOATING GALLERY */}
+      {/* WORK / 3D CAROUSEL GALLERY */}
       <section id="work">
         <div className="work-header">
           <h2>Interface <span>Preview</span></h2>
-          <p>Шесть модулей, один штаб. Каждый экран продуман для скорости и ясности.</p>
+          <p>Пять модулей, один штаб. Каждый экран продуман для скорости и ясности.</p>
         </div>
-        <div id="work-gallery">
+        <div id="work-gallery" ref={galleryRef}>
           {cardsData.map((d, i) => (
-            <div key={i} className="work-card">
+            <div 
+              key={i} 
+              className="work-card"
+              ref={el => { cardRefs.current[i] = el; }}
+            >
               <div className="card-visual">
                 <div className="v-icon">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
@@ -813,8 +907,6 @@ export const DashboardPage: React.FC = () => {
               <a href="#ladder-section">Notes</a>
               <a href="#ladder-section">Board</a>
               <a href="#ladder-section">Ideas</a>
-              <a href="#ladder-section">Templates</a>
-              <a href="#ladder-section">Wallpaper</a>
             </div>
             <div className="footer-col">
               <h4>GitHub</h4>
@@ -831,3 +923,4 @@ export const DashboardPage: React.FC = () => {
     </div>
   );
 };
+export default DashboardPage;
