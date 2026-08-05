@@ -49,8 +49,9 @@ function SidebarLink({ to, children }: { to: string; children: React.ReactNode }
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { data: activeWallpapers } = useActiveWallpapers();
-  const activeBackground = activeWallpapers?.find(w => !/\.gif$/i.test(w.filename));
-  const activeGif = activeWallpapers?.find(w => /\.gif$/i.test(w.filename));
+  const wallpapersArray = Array.isArray(activeWallpapers) ? activeWallpapers : (activeWallpapers ? [activeWallpapers] : []);
+  const activeBackground = wallpapersArray.find((w: any) => !/\.gif$/i.test(w.filename));
+  const activeGif = wallpapersArray.find((w: any) => /\.gif$/i.test(w.filename));
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const isVideo = activeBackground?.filename ? /\.(mp4|webm|mov)$/i.test(activeBackground.filename) : false;
