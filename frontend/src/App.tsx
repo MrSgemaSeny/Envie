@@ -109,10 +109,10 @@ function Layout({ children }: { children: React.ReactNode }) {
       
       {!activeBackground && isForYou && (
         <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pointer-events-none select-none opacity-40">
-          <p className="font-serif font-black text-3xl sm:text-5xl tracking-[0.2em] text-foreground uppercase mb-2">
+          <p className="font-serif font-black text-xl sm:text-3xl tracking-[0.2em] text-foreground uppercase mb-2">
             Nothing is impossible.
           </p>
-          <p className="font-serif font-black text-3xl sm:text-5xl tracking-[0.2em] text-foreground uppercase">
+          <p className="font-serif font-black text-xl sm:text-3xl tracking-[0.2em] text-foreground uppercase">
             Believe in yourself.
           </p>
         </div>
