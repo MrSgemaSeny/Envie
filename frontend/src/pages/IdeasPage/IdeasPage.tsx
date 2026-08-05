@@ -8,7 +8,7 @@ export const IdeasPage: React.FC = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto flex flex-col gap-8 w-full pb-20">
+    <div className="p-6 md:p-8 flex flex-col gap-8 w-full pb-20">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-semibold text-foreground tracking-tight">Ideas</h1>

@@ -80,92 +80,104 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <Drawer.Trigger asChild>{trigger}</Drawer.Trigger>}
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 bg-black/60 z-40 transition-opacity" />
-        <Drawer.Content className="bg-card/90 backdrop-blur-xl border-t border-border flex flex-col rounded-t-2xl max-h-[85vh] fixed bottom-0 left-0 right-0 z-50 focus:outline-none shadow-2xl">
-          <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-border mt-4 mb-6" />
-          <div className="px-6 pb-6 overflow-y-auto flex-1 max-w-2xl mx-auto w-full">
-            <div className="flex flex-col gap-1 mb-6 border-b border-border/50 pb-4">
-              <Drawer.Title className="font-semibold text-lg text-foreground">
-                {idea ? 'Edit Idea' : 'Create Idea'}
-              </Drawer.Title>
-              <p className="text-xs text-muted-foreground">
-                Structure your concept, target market, and monetization strategy.
-              </p>
+        <Drawer.Overlay className="fixed inset-0 bg-black/80 z-40 transition-opacity" />
+        <Drawer.Content className="bg-background flex flex-col fixed inset-0 z-50 focus:outline-none overflow-y-auto">
+          <div className="w-full max-w-2xl mx-auto px-6 py-12 flex flex-col gap-8">
+            {/* Top Navigation / Header */}
+            <div className="flex flex-col gap-4 border-b border-border/50 pb-6">
+              <button
+                onClick={() => onOpenChange(false)}
+                className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors w-fit pointer-events-auto"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                Back to Ideas
+              </button>
+              
+              <div className="flex flex-col gap-1">
+                <Drawer.Title className="font-semibold text-2xl text-foreground tracking-tight">
+                  {idea ? 'Edit Idea' : 'Create New Idea'}
+                </Drawer.Title>
+                <p className="text-sm text-muted-foreground">
+                  Structure your concept, target market, and monetization strategy.
+                </p>
+              </div>
             </div>
             
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               <div className="flex flex-col">
-                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Idea Title</label>
+                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Idea Title</label>
                 <input
                   type="text"
                   placeholder="e.g. Decentralized Storage Network"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground"
+                  className="w-full px-3 py-2 bg-card border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground rounded-md"
                   autoFocus
                 />
               </div>
               
               <div className="flex flex-col">
-                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Summary</label>
+                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Summary</label>
                 <textarea
                   placeholder="Brief description of the core idea"
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
-                  className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground resize-none min-h-[60px]"
+                  className="w-full px-3 py-2 bg-card border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground resize-none min-h-[70px] rounded-md"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="flex flex-col">
-                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Problem Statement</label>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Problem Statement</label>
                   <textarea
                     placeholder="What pain point does this solve?"
                     value={problem}
                     onChange={(e) => setProblem(e.target.value)}
-                    className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground resize-none min-h-[80px]"
+                    className="w-full px-3 py-2 bg-card border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground resize-none min-h-[90px] rounded-md"
                   />
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Proposed Solution</label>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Proposed Solution</label>
                   <textarea
                     placeholder="How does your solution address the problem?"
                     value={solution}
                     onChange={(e) => setSolution(e.target.value)}
-                    className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground resize-none min-h-[80px]"
+                    className="w-full px-3 py-2 bg-card border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground resize-none min-h-[90px] rounded-md"
                   />
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Target Audience</label>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Target Audience</label>
                   <input
                     type="text"
                     placeholder="Who is this for?"
                     value={audience}
                     onChange={(e) => setAudience(e.target.value)}
-                    className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground"
+                    className="w-full px-3 py-2 bg-card border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground rounded-md"
                   />
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Monetization Strategy</label>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Monetization Strategy</label>
                   <input
                     type="text"
                     placeholder="How will this make money?"
                     value={monetization}
                     onChange={(e) => setMonetization(e.target.value)}
-                    className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground"
+                    className="w-full px-3 py-2 bg-card border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground rounded-md"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col">
-                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Canvas Status</label>
+                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Canvas Status</label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as IdeaStatus)}
-                  className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground"
+                  className="w-full px-3 py-2 bg-card border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground rounded-md"
                 >
                   <option value="RAW">RAW</option>
                   <option value="EXPLORING">EXPLORING</option>
@@ -174,7 +186,7 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
                 </select>
               </div>
 
-              <div className="flex justify-end gap-3 mt-4">
+              <div className="flex justify-end gap-3 mt-6 border-t border-border/50 pt-6">
                 <button
                   type="button"
                   onClick={() => onOpenChange(false)}

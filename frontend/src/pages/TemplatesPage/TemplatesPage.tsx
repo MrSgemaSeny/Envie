@@ -9,7 +9,7 @@ export function TemplatesPage() {
   const { data: selectedTemplate, isLoading: templateLoading } = useGetTemplate(selectedTemplateName);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-3rem)] gap-4 animate-in fade-in duration-300">
+    <div className="flex flex-col h-full gap-4 animate-in fade-in duration-300 p-6 md:p-8 w-full">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Templates</h1>
         <p className="text-muted-foreground text-sm">Manage and customize your system templates.</p>

@@ -75,7 +75,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           <SidebarLink to="/wallpaper">Wallpaper</SidebarLink>
         </nav>
       </aside>
-      <main className="flex-1 overflow-auto p-6 max-w-6xl mx-auto w-full z-10 relative">
+      <main className="flex-1 overflow-auto w-full z-10 relative">
         {children}
       </main>
       <HealthCheck />

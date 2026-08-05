@@ -7,7 +7,7 @@ export const BoardPage: React.FC = () => {
   const { data: tasks = [], isLoading, isError } = useTasks();
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto flex flex-col gap-8">
+    <div className="p-6 md:p-8 flex flex-col gap-8 w-full">
       <div>
         <h1 className="text-3xl font-semibold text-foreground tracking-tight">Tasks</h1>
         <p className="text-muted-foreground mt-1 text-sm">Manage your tasks and subtasks.</p>
