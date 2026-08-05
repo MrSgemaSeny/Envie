@@ -7,6 +7,7 @@ import { BoardPage } from './pages/BoardPage/BoardPage';
 import { IdeasPage } from './pages/IdeasPage/IdeasPage';
 import { TemplatesPage } from './pages/TemplatesPage/TemplatesPage';
 import { WallpaperPage } from './pages/WallpaperPage/WallpaperPage';
+import { LandingPage } from './pages/LandingPage/LandingPage';
 import { useActiveWallpaper } from './entities/wallpaper/api';
 import { Toaster, toast } from 'sonner';
 import { useEffect } from 'react';
@@ -66,7 +67,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           <h2 className="text-base font-semibold tracking-tight text-foreground">Envie</h2>
         </div>
         <nav className="flex flex-col gap-1 flex-1">
-          <SidebarLink to="/">Dashboard</SidebarLink>
+          <SidebarLink to="/dashboard">Dashboard</SidebarLink>
           <SidebarLink to="/notes">Notes</SidebarLink>
           <SidebarLink to="/board">Board</SidebarLink>
           <SidebarLink to="/ideas">Ideas</SidebarLink>
@@ -82,20 +83,30 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+function AppRoutes() {
+  return (
+    <Layout>
+      <Routes>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/notes" element={<FeedPage />} />
+        <Route path="/board" element={<BoardPage />} />
+        <Route path="/ideas" element={<IdeasPage />} />
+        <Route path="/templates" element={<TemplatesPage />} />
+        <Route path="/wallpaper" element={<WallpaperPage />} />
+      </Routes>
+    </Layout>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter basename="/Envie">
       <Toaster theme="dark" position="bottom-right" />
-      <Layout>
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/notes" element={<FeedPage />} />
-          <Route path="/board" element={<BoardPage />} />
-          <Route path="/ideas" element={<IdeasPage />} />
-          <Route path="/templates" element={<TemplatesPage />} />
-          <Route path="/wallpaper" element={<WallpaperPage />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/*" element={<AppRoutes />} />
+      </Routes>
     </BrowserRouter>
   );
 }
+

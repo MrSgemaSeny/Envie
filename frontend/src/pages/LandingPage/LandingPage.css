@@ -1,0 +1,320 @@
+/* ==============================
+   Landing Page Styles
+   Isolated from Tailwind — raw CSS
+   ============================== */
+
+.landing-root {
+  width: 100%;
+  background: #000;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---- Canvas ---- */
+.landing-canvas-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.landing-canvas-wrap canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ---- Scanlines ---- */
+.landing-scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+}
+
+/* ---- Vignette ---- */
+.landing-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+  pointer-events: none;
+}
+
+/* ---- Brand ---- */
+.landing-brand {
+  position: fixed;
+  top: 32px;
+  left: 8vw;
+  z-index: 20;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+/* ---- Hero Layout ---- */
+.landing-layout {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  pointer-events: none;
+}
+
+.landing-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 6vw 0 8vw;
+  pointer-events: auto;
+}
+
+.landing-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  color: #555;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.landing-clock {
+  margin-bottom: 40px;
+}
+
+.landing-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: #fff;
+  line-height: 1;
+}
+
+.landing-clock-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 300;
+  color: #555;
+  letter-spacing: 0.1em;
+  margin-top: 10px;
+}
+
+.landing-divider {
+  width: 32px;
+  height: 1px;
+  background: #555;
+  margin-bottom: 32px;
+}
+
+.landing-h1 {
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.landing-h1 em {
+  font-style: normal;
+  color: #555;
+  font-weight: 300;
+}
+
+.landing-sub {
+  font-size: 14px;
+  font-weight: 300;
+  color: #555;
+  line-height: 1.7;
+  max-width: 320px;
+  margin-bottom: 48px;
+}
+
+/* ---- CTA ---- */
+.landing-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 28px;
+  border: 1px solid #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease-out, color 0.2s ease-out;
+  pointer-events: auto;
+}
+
+.landing-cta:hover {
+  background: #fff;
+  color: #000;
+}
+
+.landing-cta-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease-out;
+}
+
+.landing-cta:hover .landing-cta-arrow {
+  transform: translateX(4px);
+}
+
+/* ---- Status Bar ---- */
+.landing-status {
+  position: fixed;
+  bottom: 32px;
+  left: 8vw;
+  right: 8vw;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landing-status span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 300;
+  color: #555;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.landing-scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.landing-scroll-line {
+  width: 24px;
+  height: 1px;
+  background: #555;
+  animation: landing-scroll-pulse 2s ease-in-out infinite;
+}
+
+@keyframes landing-scroll-pulse {
+  0%, 100% { opacity: 0.3; width: 16px; }
+  50% { opacity: 1; width: 32px; }
+}
+
+/* ==============================
+   Scroll Sections
+   ============================== */
+
+.landing-sections {
+  position: relative;
+  z-index: 15;
+  margin-top: 100vh; /* push below the hero viewport */
+}
+
+.landing-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 8vw;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 1) 100%);
+}
+
+.landing-section-inner {
+  max-width: 520px;
+}
+
+.landing-section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: #555;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 24px;
+}
+
+.landing-section-title {
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.landing-section-desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: #888;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.landing-section-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.landing-section-points li {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 300;
+  color: #aaa;
+  letter-spacing: 0.04em;
+  padding-left: 20px;
+  position: relative;
+}
+
+.landing-section-points li::before {
+  content: '\2014'; /* em dash */
+  position: absolute;
+  left: 0;
+  color: #555;
+}
+
+/* Final CTA section */
+.landing-section-final {
+  text-align: center;
+}
+
+.landing-section-final .landing-section-title {
+  margin-bottom: 16px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .landing-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-left {
+    padding: 0 6vw;
+  }
+
+  .landing-section {
+    padding: 60px 6vw;
+  }
+}

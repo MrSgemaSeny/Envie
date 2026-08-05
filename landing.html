@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HQ — Your Personal Headquarters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #000000;
+    --fg: #ffffff;
+    --muted: #555555;
+    --border: #1a1a1a;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Canvas ---- */
+  #canvas-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
+  #canvas-wrap canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* ---- Layout ---- */
+  #layout {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0;
+    pointer-events: none;
+  }
+
+  /* ---- Left panel ---- */
+  #left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 6vw 0 8vw;
+    pointer-events: auto;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .clock {
+    font-family: var(--mono);
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    line-height: 1;
+    margin-bottom: 40px;
+  }
+
+  .clock-date {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-top: 10px;
+  }
+
+  .divider {
+    width: 32px;
+    height: 1px;
+    background: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  h1 {
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+    margin-bottom: 16px;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .sub {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 320px;
+    margin-bottom: 48px;
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    border: 1px solid var(--fg);
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg);
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .cta:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .cta-arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+
+  .cta:hover .cta-arrow { transform: translateX(4px); }
+
+  /* ---- Top-left label ---- */
+  #brand {
+    position: fixed;
+    top: 32px;
+    left: 8vw;
+    z-index: 20;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---- Bottom status bar ---- */
+  #status {
+    position: fixed;
+    bottom: 32px;
+    left: 8vw;
+    right: 8vw;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #status span {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .scroll-line {
+    width: 24px;
+    height: 1px;
+    background: var(--muted);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-pulse {
+    0%, 100% { opacity: 0.3; width: 16px; }
+    50% { opacity: 1; width: 32px; }
+  }
+
+  /* ---- Scanline overlay (subtle texture) ---- */
+  #scanlines {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* ---- Vignette ---- */
+  #vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="canvas-wrap">
+  <canvas id="three-canvas"></canvas>
+</div>
+
+<div id="scanlines"></div>
+<div id="vignette"></div>
+
+<div id="brand">HQ</div>
+
+<div id="layout">
+  <div id="left">
+    <div class="eyebrow">Personal Headquarters</div>
+    <div class="clock">
+      <div id="time">00:00:00</div>
+      <div class="clock-date" id="date-str">—</div>
+    </div>
+    <div class="divider"></div>
+    <h1>Everything<br>you think,<br><em>in one place.</em></h1>
+    <p class="sub">Notes. Ideas. Plans. A board that moves when you do. No team rituals. No distractions.</p>
+    <a class="cta" href="#app">Get started <span class="cta-arrow">→</span></a>
+  </div>
+  <div></div><!-- right: globe lives in canvas behind -->
+</div>
+
+<div id="status">
+  <span>v1.0.0 — local</span>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>scroll</span>
+  </div>
+  <span id="coords">00.0000°N / 00.0000°E</span>
+</div>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  /* ---- Clock ---- */
+  const timeEl = document.getElementById('time');
+  const dateEl = document.getElementById('date-str');
+  const coordsEl = document.getElementById('coords');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateClock() {
+    const now = new Date();
+    timeEl.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+    dateEl.textContent = now.toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* ---- Three.js Setup ---- */
+  const canvas = document.getElementById('three-canvas');
+  const W = () => window.innerWidth;
+  const H = () => window.innerHeight;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(W(), H());
+  renderer.setClearColor(0x000000, 1);
+
+  const scene = new THREE.Scene();
+
+  /* Camera — positioned right of center so globe sits on right half */
+  const cam = new THREE.PerspectiveCamera(38, W() / H(), 0.1, 100);
+  cam.position.set(1.8, 0, 3.2);
+  cam.lookAt(1.8, 0, 0);
+
+  /* ---- Globe: wireframe only, white ---- */
+  const RADIUS = 1;
+
+  /* Lat/lon lines — manual for control over density */
+  const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 });
+  const wireMatBright = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.45 });
+
+  const globeGroup = new THREE.Group();
+  globeGroup.position.set(1.8, 0, 0);
+  scene.add(globeGroup);
+
+  /* Latitude rings */
+  const LAT_LINES = 18; /* every 10° */
+  for (let i = 0; i <= LAT_LINES; i++) {
+    const lat = -90 + (180 / LAT_LINES) * i;
+    const phi = (90 - lat) * Math.PI / 180;
+    const r = RADIUS * Math.sin(phi);
+    const y = RADIUS * Math.cos(phi);
+    const pts = [];
+    const SEG = 64;
+    for (let j = 0; j <= SEG; j++) {
+      const theta = (j / SEG) * Math.PI * 2;
+      pts.push(new THREE.Vector3(r * Math.cos(theta), y, r * Math.sin(theta)));
+    }
+    const mat = (lat === 0) ? wireMatBright : wireMat; /* equator brighter */
+    globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat));
+  }
+
+  /* Longitude meridians */
+  const LON_LINES = 24; /* every 15° */
+  for (let i = 0; i < LON_LINES; i++) {
+    const lon = (360 / LON_LINES) * i;
+    const theta = lon * Math.PI / 180;
+    const pts = [];
+    const SEG = 64;
+    for (let j = 0; j <= SEG; j++) {
+      const phi = (j / SEG) * Math.PI;
+      pts.push(new THREE.Vector3(
+        RADIUS * Math.sin(phi) * Math.cos(theta),
+        RADIUS * Math.cos(phi),
+        RADIUS * Math.sin(phi) * Math.sin(theta)
+      ));
+    }
+    /* Prime meridian + antimeridian brighter */
+    const mat = (i === 0 || i === LON_LINES / 2) ? wireMatBright : wireMat;
+    globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat));
+  }
+
+  /* Thin inner sphere for subtle depth */
+  const innerGeo = new THREE.SphereGeometry(RADIUS * 0.995, 1, 1);
+  const innerMat = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide });
+  globeGroup.add(new THREE.Mesh(innerGeo, innerMat));
+
+  /* ---- Stars: sparse, dim ---- */
+  const starCount = 800;
+  const starPos = new Float32Array(starCount * 3);
+  for (let i = 0; i < starCount * 3; i++) {
+    starPos[i] = (Math.random() - 0.5) * 60;
+  }
+  const starGeo = new THREE.BufferGeometry();
+  starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
+  const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.25 });
+  scene.add(new THREE.Points(starGeo, starMat));
+
+  /* ---- Coordinate readout driven by globe rotation ---- */
+  let rotY = 0;
+  function updateCoords() {
+    /* Convert current rotation to a "longitude" and show a fixed lat for aesthetics */
+    const lon = ((rotY * 180 / Math.PI) % 360 + 360) % 360;
+    const displayLon = lon > 180 ? lon - 360 : lon;
+    const lonDir = displayLon >= 0 ? 'E' : 'W';
+    coordsEl.textContent =
+      '51.5074°N / ' +
+      Math.abs(displayLon).toFixed(4) + '°' + lonDir;
+  }
+
+  /* ---- Resize ---- */
+  window.addEventListener('resize', () => {
+    renderer.setSize(W(), H());
+    cam.aspect = W() / H();
+    cam.updateProjectionMatrix();
+  });
+
+  /* ---- Animate ---- */
+  const SPEED = 0.0015;
+  function animate() {
+    requestAnimationFrame(animate);
+    rotY += SPEED;
+    globeGroup.rotation.y = rotY;
+    updateCoords();
+    renderer.render(scene, cam);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>
