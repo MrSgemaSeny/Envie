@@ -55,8 +55,10 @@ function Layout({ children }: { children: React.ReactNode }) {
   
   const bgStyle = activeWallpaper && !isVideo && !isGif ? {
     backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeWallpaper.filename})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center'
+    backgroundSize: 'contain',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundAttachment: 'fixed'
   } : {};
 
   return (
