@@ -47,7 +47,7 @@ export function TemplatesPage() {
         </div>
 
         {/* Main Area */}
-        <div className="flex-1 overflow-hidden bg-background">
+        <div className="flex-1 overflow-hidden bg-card border border-border rounded-lg shadow-sm">
           {selectedTemplateName ? (
             templateLoading ? (
               <div className="h-full flex items-center justify-center">
@@ -57,7 +57,9 @@ export function TemplatesPage() {
                 </div>
               </div>
             ) : selectedTemplate ? (
-              <TemplateViewer template={selectedTemplate} />
+              <div className="h-full p-6">
+                <TemplateViewer template={selectedTemplate} />
+              </div>
             ) : (
               <div className="h-full flex items-center justify-center">
                 <p className="text-muted-foreground text-sm">Failed to load template.</p>
