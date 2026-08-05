@@ -29,7 +29,7 @@ export function useLadder(
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(W(), H());
-    renderer.setClearColor(0x08080f, 1);
+    renderer.setClearColor(0x000000, 0);
 
     // Scene
     const scene = new THREE.Scene();

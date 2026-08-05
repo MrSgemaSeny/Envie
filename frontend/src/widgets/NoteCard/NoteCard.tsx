@@ -33,27 +33,6 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
 
   return (
     <div className="group rounded-xl border border-border/40 bg-card/30 hover:bg-card/50 hover:border-border/60 transition-colors duration-200 overflow-hidden">
-      {/* Media at top if exists */}
-      {note.media && note.media.length > 0 && (
-        <div className="flex gap-0.5 overflow-hidden">
-          {note.media.map(m => {
-            const url = getMediaUrl(m);
-            if (m.mediaType.startsWith('image/')) {
-              return (
-                <a key={m.id} href={url} target="_blank" rel="noopener noreferrer" className="block flex-1 min-w-0">
-                  <img
-                    src={url}
-                    alt={m.originalName}
-                    className="w-full h-48 object-cover hover:opacity-90 transition-opacity duration-200"
-                  />
-                </a>
-              );
-            }
-            return null;
-          })}
-        </div>
-      )}
-
       <div className="p-4">
         {/* Header: pinned badge + time + actions */}
         <div className="flex items-center justify-between mb-2.5">
@@ -97,6 +76,30 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
         <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap" style={{ fontWeight: 400 }}>
           {note.content}
         </p>
+
+        {/* Images */}
+        {note.media && note.media.some(m => m.mediaType.startsWith('image/')) && (
+          <div className="flex gap-2 mt-3 flex-wrap">
+            {note.media.filter(m => m.mediaType.startsWith('image/')).map(m => {
+              const url = getMediaUrl(m);
+              return (
+                <a 
+                  key={m.id} 
+                  href={url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="block overflow-hidden rounded-lg border border-border/30 hover:border-border/50 transition-colors duration-150"
+                >
+                  <img
+                    src={url}
+                    alt={m.originalName}
+                    className="max-h-[450px] w-auto max-w-full object-contain bg-muted/5 hover:opacity-95 transition-opacity duration-200"
+                  />
+                </a>
+              );
+            })}
+          </div>
+        )}
 
         {/* File attachments (non-image) */}
         {note.media && note.media.some(m => !m.mediaType.startsWith('image/')) && (

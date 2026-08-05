@@ -10,7 +10,7 @@ import { WallpaperPage } from './pages/WallpaperPage/WallpaperPage';
 import { LandingPage } from './pages/LandingPage/LandingPage';
 import { useActiveWallpaper } from './entities/wallpaper/api';
 import { Toaster, toast } from 'sonner';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function HealthCheck() {
   const { data, isLoading, error } = useQuery({
@@ -50,6 +50,7 @@ function SidebarLink({ to, children }: { to: string; children: React.ReactNode }
 function Layout({ children }: { children: React.ReactNode }) {
   const { data: activeWallpaper } = useActiveWallpaper();
   const isVideo = activeWallpaper?.filename ? /\.(mp4|webm|mov)$/i.test(activeWallpaper.filename) : false;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
   const bgStyle = activeWallpaper && !isVideo ? {
     backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeWallpaper.filename})`,
@@ -70,23 +71,45 @@ function Layout({ children }: { children: React.ReactNode }) {
         />
       )}
       {activeWallpaper && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
-      <aside className="w-56 border-r border-border/50 bg-background/60 backdrop-blur-md flex flex-col p-4 flex-shrink-0 z-10 relative">
-        <div className="mb-6 px-2 flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-foreground flex items-center justify-center">
-            <div className="w-3 h-3 bg-background rounded-sm" />
-          </div>
-          <h2 className="text-base font-semibold tracking-tight text-foreground">Envie</h2>
+      
+      {/* Collapsible Hamburger Button */}
+      <button
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className={`fixed top-4 z-30 p-2 rounded-lg bg-background/60 border border-border/40 backdrop-blur-md hover:bg-muted text-foreground transition-all duration-300 ease-out active:scale-95 ${
+          isSidebarOpen ? 'left-[236px]' : 'left-4'
+        }`}
+        aria-label="Toggle Sidebar"
+      >
+        <div className="w-4 h-4 relative">
+          <span className={`absolute left-0 right-0 h-0.5 bg-foreground rounded transition-all duration-300 ${isSidebarOpen ? 'top-1.5 rotate-45' : 'top-0.5'}`} />
+          <span className={`absolute left-0 right-0 h-0.5 bg-foreground rounded transition-all duration-300 top-[7px] ${isSidebarOpen ? 'opacity-0 scale-x-0' : ''}`} />
+          <span className={`absolute left-0 right-0 h-0.5 bg-foreground rounded transition-all duration-300 ${isSidebarOpen ? 'bottom-1.5 -rotate-45' : 'bottom-0.5'}`} />
         </div>
-        <nav className="flex flex-col gap-1 flex-1">
-          <SidebarLink to="/dashboard">Dashboard</SidebarLink>
-          <SidebarLink to="/notes">Notes</SidebarLink>
-          <SidebarLink to="/board">Board</SidebarLink>
-          <SidebarLink to="/ideas">Ideas</SidebarLink>
-          <SidebarLink to="/templates">Templates</SidebarLink>
-          <SidebarLink to="/wallpaper">Wallpaper</SidebarLink>
-        </nav>
+      </button>
+
+      <aside className={`transition-all duration-300 ease-in-out ${
+        isSidebarOpen ? 'w-56 border-r border-border/50 p-4' : 'w-0 p-0 border-r-0 overflow-hidden'
+      } bg-background/60 backdrop-blur-md flex flex-col flex-shrink-0 z-20 relative`}>
+        <div className="w-48 flex flex-col h-full flex-shrink-0">
+          <div className="mb-6 px-2 flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-foreground flex items-center justify-center">
+              <div className="w-3 h-3 bg-background rounded-sm" />
+            </div>
+            <h2 className="text-base font-semibold tracking-tight text-foreground">Envie</h2>
+          </div>
+          <nav className="flex flex-col gap-1 flex-1">
+            <SidebarLink to="/dashboard">Dashboard</SidebarLink>
+            <SidebarLink to="/notes">Notes</SidebarLink>
+            <SidebarLink to="/board">Board</SidebarLink>
+            <SidebarLink to="/ideas">Ideas</SidebarLink>
+            <SidebarLink to="/templates">Templates</SidebarLink>
+            <SidebarLink to="/wallpaper">Wallpaper</SidebarLink>
+          </nav>
+        </div>
       </aside>
-      <main className="flex-1 overflow-auto w-full z-10 relative">
+      <main className={`flex-1 overflow-auto w-full z-10 relative transition-all duration-300 ease-in-out ${
+        isSidebarOpen ? 'pl-0' : 'pl-12'
+      }`}>
         {children}
       </main>
       <HealthCheck />
