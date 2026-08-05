@@ -1,0 +1,146 @@
+/* ==============================
+   Dashboard Scroll-Ladder Styles
+   ============================== */
+
+.dash-scroll-root {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #08080f;
+  border-radius: 12px;
+}
+
+.dash-scroll-area {
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  position: relative;
+}
+
+.dash-scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+.dash-scroll-inner {
+  height: 600vh;
+  position: relative;
+}
+
+.dash-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Gradient background */
+.dash-gradient-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 30% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 50%, rgba(56, 189, 248, 0.06) 0%, transparent 60%);
+}
+
+/* Text blocks */
+.dash-text-block {
+  position: absolute;
+  top: 50%;
+  width: 260px;
+  transform: translateY(-50%);
+  transition: none;
+  pointer-events: none;
+  font-family: 'Space Grotesk', 'Geist Sans', sans-serif;
+}
+
+.dash-text-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 10px;
+  font-weight: 400;
+  font-family: 'JetBrains Mono', 'Geist Mono', monospace;
+}
+
+.dash-text-title {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.12;
+  color: #fff;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.dash-text-body {
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 300;
+}
+
+/* Progress bar */
+.dash-progress-bar {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 120px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.dash-progress-fill {
+  width: 100%;
+  background: linear-gradient(180deg, #7c3aed, #38bdf8);
+  border-radius: 2px;
+  height: 0%;
+  transition: height 0.1s linear;
+}
+
+/* Scroll hint */
+.dash-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', 'Geist Mono', monospace;
+  animation: dash-hint 2s ease-in-out infinite;
+}
+
+@keyframes dash-hint {
+  0%, 100% { opacity: 0.2; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 0.6; transform: translateX(-50%) translateY(4px); }
+}
+
+/* Bottom navigation links */
+.dash-bottom-nav {
+  position: absolute;
+  bottom: 28px;
+  right: 48px;
+  display: flex;
+  gap: 16px;
+  pointer-events: auto;
+}
+
+.dash-nav-link {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+  text-decoration: none;
+  font-family: 'JetBrains Mono', 'Geist Mono', monospace;
+  transition: color 0.2s ease-out;
+}
+
+.dash-nav-link:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
