@@ -3,7 +3,8 @@ import {
   useWallpapers, 
   useUploadWallpaper, 
   useActivateWallpaper, 
-  useDeleteWallpaper 
+  useDeleteWallpaper,
+  useDeactivateWallpaper
 } from '../../entities/wallpaper/api';
 import { apiClient } from '../../shared/api/client';
 import { toast } from 'sonner';
@@ -12,6 +13,7 @@ export function WallpaperPage() {
   const { data: wallpapers = [], isLoading } = useWallpapers();
   const upload = useUploadWallpaper();
   const activate = useActivateWallpaper();
+  const deactivate = useDeactivateWallpaper();
   const deleteWallpaper = useDeleteWallpaper();
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,16 +40,27 @@ export function WallpaperPage() {
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Wallpapers</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage your background images</p>
         </div>
-        <label className="cursor-pointer bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-all duration-200 ease-out active:scale-[0.98] shadow-sm">
-          Upload Wallpaper
-          <input 
-            type="file" 
-            accept="image/*" 
-            className="hidden" 
-            onChange={handleUpload} 
-            disabled={upload.isPending}
-          />
-        </label>
+        <div className="flex items-center gap-3">
+          {wallpapers.some(w => w.isActive) && (
+            <button 
+              onClick={() => deactivate.mutate()}
+              disabled={deactivate.isPending}
+              className="bg-muted text-foreground border border-border px-4 py-2 rounded-md text-sm font-medium hover:bg-muted/80 transition-all duration-200 ease-out active:scale-[0.98] shadow-sm"
+            >
+              Clear Background
+            </button>
+          )}
+          <label className="cursor-pointer bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-all duration-200 ease-out active:scale-[0.98] shadow-sm">
+            Upload Wallpaper
+            <input 
+              type="file" 
+              accept="image/*" 
+              className="hidden" 
+              onChange={handleUpload} 
+              disabled={upload.isPending}
+            />
+          </label>
+        </div>
       </div>
 
       {wallpapers.length === 0 ? (
@@ -77,6 +90,15 @@ export function WallpaperPage() {
                     className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 active:scale-95 transition-transform duration-200 ease-out"
                   >
                     Activate
+                  </button>
+                )}
+                {wp.isActive && (
+                  <button 
+                    onClick={() => deactivate.mutate()}
+                    disabled={deactivate.isPending}
+                    className="bg-muted text-foreground border border-border px-4 py-2 rounded-md text-sm font-medium hover:bg-muted/80 active:scale-95 transition-transform duration-200 ease-out"
+                  >
+                    Deactivate
                   </button>
                 )}
                 <button 

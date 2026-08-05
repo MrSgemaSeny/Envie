@@ -63,3 +63,15 @@ export function useDeleteWallpaper() {
     }
   });
 }
+
+export function useDeactivateWallpaper() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      await apiClient.put<ApiResponse<void>>('/wallpapers/deactivate');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wallpapers'] });
+    }
+  });
+}

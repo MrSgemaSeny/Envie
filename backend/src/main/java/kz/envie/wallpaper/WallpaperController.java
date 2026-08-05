@@ -41,6 +41,12 @@ public class WallpaperController {
         return ResponseEntity.ok(ApiResponse.ok(wallpaperService.activateWallpaper(id)));
     }
 
+    @PutMapping("/deactivate")
+    public ResponseEntity<ApiResponse<Void>> deactivateWallpaper() {
+        wallpaperService.deactivateAll();
+        return ResponseEntity.ok(ApiResponse.ok(null));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteWallpaper(@PathVariable UUID id) {
         wallpaperService.deleteWallpaper(id);
