@@ -107,6 +107,17 @@ function Layout({ children }: { children: React.ReactNode }) {
       )}
       {activeBackground && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
       
+      {!activeBackground && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pointer-events-none select-none opacity-20">
+          <p className="font-mono text-[11px] tracking-[0.4em] text-foreground lowercase mb-2">
+            nothing is impossible.
+          </p>
+          <p className="font-mono text-[11px] tracking-[0.4em] text-foreground lowercase">
+            believe in yourself.
+          </p>
+        </div>
+      )}
+      
       {/* Collapsible Hamburger Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
