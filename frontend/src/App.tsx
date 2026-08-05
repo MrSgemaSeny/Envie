@@ -87,8 +87,8 @@ function Layout({ children }: { children: React.ReactNode }) {
       </button>
 
       <aside className={`transition-all duration-300 ease-in-out ${
-        isSidebarOpen ? 'w-56 border-r border-border/50 p-4 pt-16' : 'w-0 p-0 border-r-0 overflow-hidden'
-      } bg-background/60 backdrop-blur-md flex flex-col flex-shrink-0 z-20 relative`}>
+        isSidebarOpen ? 'ml-0' : '-ml-56'
+      } w-56 border-r border-border/50 p-4 pt-16 bg-background/60 backdrop-blur-md flex flex-col flex-shrink-0 z-20 relative`}>
         <div className="w-48 flex flex-col h-full flex-shrink-0">
           <div className="mb-6 px-2 flex items-center gap-2">
             <div className="w-6 h-6 rounded bg-foreground flex items-center justify-center">
