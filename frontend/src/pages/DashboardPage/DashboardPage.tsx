@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNotes } from '../../entities/note/api';
 import { useTasks } from '../../entities/task/api';
-import { useIdeas } from '../../entities/idea/api';
+import { useGetIdeas } from '../../entities/idea/api';
 
 export const DashboardPage: React.FC = () => {
   const { data: notes, isLoading: isNotesLoading } = useNotes();
   const { data: tasks, isLoading: isTasksLoading } = useTasks();
-  const { data: ideas, isLoading: isIdeasLoading } = useIdeas();
+  const { data: ideas, isLoading: isIdeasLoading } = useGetIdeas();
 
   return (
     <div className="flex flex-col gap-8 w-full animate-in fade-in duration-500">

@@ -17,6 +17,13 @@
 
   --shadow-glow: 0 0 15px rgba(255, 255, 255, 0.05);
   --shadow-glow-hover: 0 0 20px rgba(255, 255, 255, 0.1);
+  /* Emil's easings */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in: cubic-bezier(0.32, 0, 0.67, 0);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  
+  --font-sans: 'Geist Sans', sans-serif;
+  --font-mono: 'Geist Mono', monospace;
 }
 
 @layer utilities {
@@ -25,15 +32,6 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
-}
-
-  /* Emil's easings */
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in: cubic-bezier(0.32, 0, 0.67, 0);
-  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
-  
-  --font-sans: 'Geist Sans', sans-serif;
-  --font-mono: 'Geist Mono', monospace;
 }
 
 body {
