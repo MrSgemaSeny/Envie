@@ -80,90 +80,117 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <Drawer.Trigger asChild>{trigger}</Drawer.Trigger>}
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 bg-black/40 z-40 transition-opacity" />
-        <Drawer.Content className="bg-card flex flex-col rounded-t-[10px] h-[90vh] mt-24 fixed bottom-0 left-0 right-0 z-50 focus:outline-none">
-          <div className="p-4 bg-card rounded-t-[10px] flex-1 overflow-y-auto">
-            <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-muted mb-8" />
-            <div className="max-w-2xl mx-auto w-full">
-              <Drawer.Title className="font-semibold text-xl mb-4 text-foreground">
+        <Drawer.Overlay className="fixed inset-0 bg-black/60 z-40 transition-opacity" />
+        <Drawer.Content className="bg-card/90 backdrop-blur-xl border-t border-border flex flex-col rounded-t-2xl max-h-[85vh] fixed bottom-0 left-0 right-0 z-50 focus:outline-none shadow-2xl">
+          <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-border mt-4 mb-6" />
+          <div className="px-6 pb-6 overflow-y-auto flex-1 max-w-2xl mx-auto w-full">
+            <div className="flex flex-col gap-1 mb-6 border-b border-border/50 pb-4">
+              <Drawer.Title className="font-semibold text-lg text-foreground">
                 {idea ? 'Edit Idea' : 'Create Idea'}
               </Drawer.Title>
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <p className="text-xs text-muted-foreground">
+                Structure your concept, target market, and monetization strategy.
+              </p>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <div className="flex flex-col">
+                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Idea Title</label>
                 <input
                   type="text"
-                  placeholder="Idea Title"
+                  placeholder="e.g. Decentralized Storage Network"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 bg-input/50 rounded-xl border border-border focus:border-muted-foreground outline-none transition-colors duration-300 text-foreground"
+                  className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground"
                   autoFocus
                 />
-                
+              </div>
+              
+              <div className="flex flex-col">
+                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Summary</label>
                 <textarea
-                  placeholder="Summary"
+                  placeholder="Brief description of the core idea"
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
-                  className="w-full px-4 py-3 bg-input/50 rounded-xl border border-border focus:border-muted-foreground outline-none transition-colors duration-300 text-foreground resize-none min-h-[80px]"
+                  className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground resize-none min-h-[60px]"
                 />
+              </div>
 
-                <textarea
-                  placeholder="Problem Statement"
-                  value={problem}
-                  onChange={(e) => setProblem(e.target.value)}
-                  className="w-full px-4 py-3 bg-input/50 rounded-xl border border-border focus:border-muted-foreground outline-none transition-colors duration-300 text-foreground resize-none min-h-[80px]"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Problem Statement</label>
+                  <textarea
+                    placeholder="What pain point does this solve?"
+                    value={problem}
+                    onChange={(e) => setProblem(e.target.value)}
+                    className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground resize-none min-h-[80px]"
+                  />
+                </div>
 
-                <textarea
-                  placeholder="Proposed Solution"
-                  value={solution}
-                  onChange={(e) => setSolution(e.target.value)}
-                  className="w-full px-4 py-3 bg-input/50 rounded-xl border border-border focus:border-muted-foreground outline-none transition-colors duration-300 text-foreground resize-none min-h-[80px]"
-                />
+                <div className="flex flex-col">
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Proposed Solution</label>
+                  <textarea
+                    placeholder="How does your solution address the problem?"
+                    value={solution}
+                    onChange={(e) => setSolution(e.target.value)}
+                    className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground resize-none min-h-[80px]"
+                  />
+                </div>
 
-                <input
-                  type="text"
-                  placeholder="Target Audience"
-                  value={audience}
-                  onChange={(e) => setAudience(e.target.value)}
-                  className="w-full px-4 py-3 bg-input/50 rounded-xl border border-border focus:border-muted-foreground outline-none transition-colors duration-300 text-foreground"
-                />
+                <div className="flex flex-col">
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Target Audience</label>
+                  <input
+                    type="text"
+                    placeholder="Who is this for?"
+                    value={audience}
+                    onChange={(e) => setAudience(e.target.value)}
+                    className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground"
+                  />
+                </div>
 
-                <input
-                  type="text"
-                  placeholder="Monetization Strategy"
-                  value={monetization}
-                  onChange={(e) => setMonetization(e.target.value)}
-                  className="w-full px-4 py-3 bg-input/50 rounded-xl border border-border focus:border-muted-foreground outline-none transition-colors duration-300 text-foreground"
-                />
+                <div className="flex flex-col">
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Monetization Strategy</label>
+                  <input
+                    type="text"
+                    placeholder="How will this make money?"
+                    value={monetization}
+                    onChange={(e) => setMonetization(e.target.value)}
+                    className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground"
+                  />
+                </div>
+              </div>
 
+              <div className="flex flex-col">
+                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Canvas Status</label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as IdeaStatus)}
-                  className="w-full px-4 py-3 bg-input/50 rounded-xl border border-border focus:border-muted-foreground outline-none transition-colors duration-300 text-foreground"
+                  className="w-full px-3 py-2 bg-background/50 rounded-md border border-border focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 outline-none transition-all duration-200 text-sm text-foreground"
                 >
                   <option value="RAW">RAW</option>
                   <option value="EXPLORING">EXPLORING</option>
                   <option value="ACCEPTED">ACCEPTED</option>
                   <option value="REJECTED">REJECTED</option>
                 </select>
+              </div>
 
-                <div className="flex justify-end gap-3 mt-4 mb-8">
-                  <button
-                    type="button"
-                    onClick={() => onOpenChange(false)}
-                    className="px-6 py-2.5 font-medium text-muted-foreground hover:text-foreground transition-opacity duration-300 ease-out active:scale-95 rounded-xl"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={!title.trim() || !summary.trim() || isPending}
-                    className="px-6 py-2.5 font-medium text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-transform duration-300 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
-                  >
-                    {isPending ? 'Saving...' : (idea ? 'Save Changes' : 'Create Idea')}
-                  </button>
-                </div>
-              </form>
-            </div>
+              <div className="flex justify-end gap-3 mt-4">
+                <button
+                  type="button"
+                  onClick={() => onOpenChange(false)}
+                  className="px-4 py-2 font-medium text-xs text-muted-foreground hover:text-foreground transition-all duration-200 ease-out active:scale-95 rounded-md hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={!title.trim() || !summary.trim() || isPending}
+                  className="px-4 py-2 font-medium text-xs text-primary-foreground bg-primary rounded-md hover:opacity-90 transition-all duration-200 ease-out active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+                >
+                  {isPending ? 'Saving...' : (idea ? 'Save Changes' : 'Create Idea')}
+                </button>
+              </div>
+            </form>
           </div>
         </Drawer.Content>
       </Drawer.Portal>
