@@ -36,8 +36,8 @@ export function useLadder(
 
     // Camera
     const cam = new THREE.PerspectiveCamera(50, W() / H(), 0.1, 200);
-    // Shift camera slightly right so that the ladder is positioned on the right side of the screen
-    cam.position.set(1.5, 0, 14);
+    // Camera positioned at center (x = 0)
+    cam.position.set(0, 0, 14);
 
     // Lights - Pure white/gray lights for a beautiful monochrome aesthetic
     scene.add(new THREE.AmbientLight(0xffffff, 0.2));
@@ -55,8 +55,8 @@ export function useLadder(
     const TURNS = 2.5;
 
     const ladderGroup = new THREE.Group();
-    // Shift the ladder group to the right (x = 1.8)
-    ladderGroup.position.set(1.8, 0, 0);
+    // Shift the ladder group significantly to the right (x = 4.2)
+    ladderGroup.position.set(4.2, 0, 0);
     scene.add(ladderGroup);
 
     // Two helical rails
@@ -145,10 +145,10 @@ export function useLadder(
       const targetLadderRot = smoothP * Math.PI * 4;
       ladderRot += (targetLadderRot - ladderRot) * 0.06;
 
-      // Camera - track slightly offset to align with the right-shifted ladder
+      // Camera - looking towards the center (x = 0)
       cam.position.y = camY;
-      cam.position.x = 1.5 + Math.sin(time * 0.3) * 0.3;
-      cam.lookAt(1.8, camY, 0);
+      cam.position.x = Math.sin(time * 0.3) * 0.3;
+      cam.lookAt(0, camY, 0);
 
       // Ladder rotation = scroll + idle spin
       ladderGroup.rotation.y = ladderRot + time * 0.06;
