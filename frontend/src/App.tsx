@@ -71,11 +71,11 @@ function Layout({ children }: { children: React.ReactNode }) {
     const handleMouseMove = () => {
       setIsMouseIdle(false);
       clearTimeout(timeout);
-      timeout = setTimeout(() => setIsMouseIdle(true), 2500);
+      timeout = setTimeout(() => setIsMouseIdle(true), 1300);
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    timeout = setTimeout(() => setIsMouseIdle(true), 2500);
+    timeout = setTimeout(() => setIsMouseIdle(true), 1300);
     
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
