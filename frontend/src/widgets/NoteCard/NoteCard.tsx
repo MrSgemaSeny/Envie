@@ -32,7 +32,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
   };
 
   return (
-    <article className={`group relative py-4 border-b border-border/20 last:border-b-0 ${note.pinned ? 'pl-3 border-l-2 border-l-foreground/15' : ''}`}>
+    <article className={`group relative py-4 border-b border-border/40 last:border-b-0 ${note.pinned ? 'pl-3 border-l-2 border-l-foreground/20' : ''}`}>
       {/* Timestamp + actions row */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
