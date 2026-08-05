@@ -32,10 +32,6 @@ export const DashboardPage: React.FC = () => {
   // Scroll and Counter Refs
   const factRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Carousel Refs
-  const galleryRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   // Hold-to-blast State
   const [isHolding, setIsHolding] = useState(false);
   const [blastProgress, setBlastProgress] = useState(0);
@@ -799,33 +795,34 @@ export const DashboardPage: React.FC = () => {
         </div>
       </section>
 
-      {/* WORK / 3D CAROUSEL GALLERY */}
+      {/* WORK / MARQUEE GALLERY */}
       <section id="work">
         <div className="work-header">
           <h2>Interface <span>Preview</span></h2>
           <p>Пять модулей, один штаб. Каждый экран продуман для скорости и ясности.</p>
         </div>
-        <div id="work-gallery" ref={galleryRef}>
-          {cardsData.map((d, i) => (
-            <div 
-              key={i} 
-              className="work-card"
-              ref={el => { cardRefs.current[i] = el; }}
-            >
-              <div className="card-visual">
-                <div className="v-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                    {d.icon}
-                  </svg>
+        <div id="work-gallery">
+          <div className="marquee-track">
+            {[...cardsData, ...cardsData].map((d, i) => (
+              <div 
+                key={i} 
+                className="work-card"
+              >
+                <div className="card-visual">
+                  <div className="v-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                      {d.icon}
+                    </svg>
+                  </div>
+                </div>
+                <div className="work-card-info">
+                  <div className="tag">{d.tag}</div>
+                  <h3>{d.title}</h3>
+                  <p>{d.desc}</p>
                 </div>
               </div>
-              <div className="work-card-info">
-                <div className="tag">{d.tag}</div>
-                <h3>{d.title}</h3>
-                <p>{d.desc}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 

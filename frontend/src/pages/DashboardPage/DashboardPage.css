@@ -489,26 +489,38 @@
 }
 
 #work-gallery {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  overflow: hidden;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 40px 40px;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
 }
 
-#work-gallery::-webkit-scrollbar {
-  display: none;
+.marquee-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  padding: 10px 0 60px;
+  animation: scrollTrack 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollTrack {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 12px)); }
 }
 
 .work-card {
   position: relative;
-  min-width: 320px;
+  min-width: 340px;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
-  scroll-snap-align: start;
   background: rgba(15, 15, 15, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
