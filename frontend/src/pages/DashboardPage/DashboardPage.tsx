@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -640,9 +640,8 @@ export const DashboardPage: React.FC = () => {
         </div>
       )}
 
-      {/* NAV */}
       <nav id="main-nav" className={`main-nav ${isNavVisible || !showPreloader ? 'visible' : ''}`}>
-        <a className="logo" href="#">Envie<span>.</span></a>
+        <Link className="logo" to="/">Envie<span>.</span></Link>
         <div className="nav-links">
           <a href="#about">О проекте</a>
           <a href="#ladder-section">Фичи</a>
