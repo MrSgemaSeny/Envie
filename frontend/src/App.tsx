@@ -108,7 +108,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       {activeBackground && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
       
       {!activeBackground && isForYou && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-[-1] pointer-events-none select-none opacity-15">
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pointer-events-none select-none opacity-15">
           <p className="font-serif font-black text-base sm:text-xl tracking-[0.2em] text-foreground uppercase mb-2 pointer-events-none select-none">
             Nothing is impossible.
           </p>
