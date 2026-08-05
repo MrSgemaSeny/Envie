@@ -539,51 +539,7 @@ export const DashboardPage: React.FC = () => {
     };
   }, []);
 
-  // 3D Carousel gallery positioning & floating animation
-  useEffect(() => {
-    const gallery = galleryRef.current;
-    if (!gallery) return;
-
-    const positionCards = () => {
-      const cx = gallery.clientWidth / 2;
-      const cy = 260;
-      cardRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const angle = (i / cardRefs.current.length) * Math.PI * 2;
-        const rx = Math.min(380, gallery.clientWidth * 0.28);
-        const ry = 140;
-        const x = cx + Math.cos(angle) * rx - el.offsetWidth / 2;
-        const y = cy + Math.sin(angle) * ry - el.offsetHeight / 2;
-        const z = Math.sin(angle) * 80;
-        const rotY = Math.cos(angle) * 8;
-        el.style.left = x + 'px';
-        el.style.top = y + 'px';
-        el.style.transform = `translateZ(${z}px) rotateY(${rotY}deg)`;
-      });
-    };
-
-    positionCards();
-    window.addEventListener('resize', positionCards);
-
-    let floatT = 0;
-    let frameId = 0;
-    const floatCards = () => {
-      floatT += 0.003;
-      cardRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const offset = Math.sin(floatT + i * 1.2) * 12;
-        const base = el.style.transform.replace(/translateY\([^)]*\)/g, '').trim();
-        el.style.transform = base + ` translateY(${offset}px)`;
-      });
-      frameId = requestAnimationFrame(floatCards);
-    };
-    floatCards();
-
-    return () => {
-      window.removeEventListener('resize', positionCards);
-      cancelAnimationFrame(frameId);
-    };
-  }, []);
+  // Clean CSS Grid layout used for work cards now.
 
   // Hold-to-blast timer & progress loops
   const startHold = () => {
