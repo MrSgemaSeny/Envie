@@ -34,8 +34,8 @@ public class MediaController {
                 if (contentType == null) {
                     contentType = "application/octet-stream";
                 }
-                boolean isImage = contentType.startsWith("image/");
-                String dispositionType = isImage ? "inline" : "attachment";
+                boolean inlineRenderable = contentType.startsWith("image/") || contentType.startsWith("video/");
+                String dispositionType = inlineRenderable ? "inline" : "attachment";
                 
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))

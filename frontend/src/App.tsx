@@ -49,8 +49,9 @@ function SidebarLink({ to, children }: { to: string; children: React.ReactNode }
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { data: activeWallpaper } = useActiveWallpaper();
+  const isVideo = activeWallpaper?.filename ? /\.(mp4|webm|mov)$/i.test(activeWallpaper.filename) : false;
   
-  const bgStyle = activeWallpaper ? {
+  const bgStyle = activeWallpaper && !isVideo ? {
     backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeWallpaper.filename})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center'
@@ -58,6 +59,16 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden selection:bg-primary/20 relative" style={bgStyle}>
+      {activeWallpaper && isVideo && (
+        <video
+          src={`${apiClient.defaults.baseURL}/media/${activeWallpaper.filename}`}
+          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+          muted
+          loop
+          autoPlay
+          playsInline
+        />
+      )}
       {activeWallpaper && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
       <aside className="w-56 border-r border-border/50 bg-background/60 backdrop-blur-md flex flex-col p-4 flex-shrink-0 z-10 relative">
         <div className="mb-6 px-2 flex items-center gap-2">

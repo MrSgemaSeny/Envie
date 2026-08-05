@@ -54,7 +54,7 @@ export function WallpaperPage() {
             Upload Wallpaper
             <input 
               type="file" 
-              accept="image/*" 
+              accept="image/*,video/*" 
               className="hidden" 
               onChange={handleUpload} 
               disabled={upload.isPending}
@@ -66,22 +66,35 @@ export function WallpaperPage() {
       {wallpapers.length === 0 ? (
         <div className="text-muted-foreground text-center py-16 bg-card rounded-xl border border-border flex flex-col items-center justify-center">
           <p className="mb-2">No wallpapers found.</p>
-          <p className="text-sm">Upload an image to personalize your workspace.</p>
+          <p className="text-sm">Upload an image or video to personalize your workspace.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {wallpapers.map(wp => (
-            <div 
-              key={wp.id} 
-              className={`relative group rounded-xl overflow-hidden border-[3px] transition-all duration-300 ease-out bg-card ${wp.isActive ? 'border-primary shadow-glow' : 'border-transparent hover:border-border'}`}
-            >
-              <div className="aspect-[16/9] w-full overflow-hidden bg-muted">
-                <img 
-                  src={`${apiClient.defaults.baseURL}/media/${wp.filename}`} 
-                  alt={wp.originalName} 
-                  className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                />
-              </div>
+          {wallpapers.map(wp => {
+            const isVideo = /\.(mp4|webm|mov)$/i.test(wp.filename);
+            return (
+              <div 
+                key={wp.id} 
+                className={`relative group rounded-xl overflow-hidden border-[3px] transition-all duration-300 ease-out bg-card ${wp.isActive ? 'border-primary shadow-glow' : 'border-transparent hover:border-border'}`}
+              >
+                <div className="aspect-[16/9] w-full overflow-hidden bg-muted">
+                  {isVideo ? (
+                    <video 
+                      src={`${apiClient.defaults.baseURL}/media/${wp.filename}`} 
+                      className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                      muted
+                      loop
+                      autoPlay
+                      playsInline
+                    />
+                  ) : (
+                    <img 
+                      src={`${apiClient.defaults.baseURL}/media/${wp.filename}`} 
+                      alt={wp.originalName} 
+                      className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    />
+                  )}
+                </div>
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out flex items-center justify-center gap-3 backdrop-blur-[2px]">
                 {!wp.isActive && (
                   <button 
@@ -124,7 +137,8 @@ export function WallpaperPage() {
                 </p>
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
       )}
     </div>
