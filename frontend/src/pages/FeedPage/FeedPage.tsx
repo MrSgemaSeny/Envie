@@ -81,7 +81,7 @@ export const FeedPage: React.FC = () => {
           {/* Pinned */}
           {pinned.length > 0 && (
             <div className="mb-2">
-              <div className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/25 mb-1 px-px">
+              <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium mb-2 px-px">
                 Pinned
               </div>
               {pinned.map(note => (
@@ -94,7 +94,7 @@ export const FeedPage: React.FC = () => {
           {unpinned.length > 0 && (
             <div>
               {pinned.length > 0 && (
-                <div className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/25 mb-1 mt-4 px-px">
+                <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium mb-2 mt-6 px-px">
                   Recent
                 </div>
               )}

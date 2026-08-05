@@ -32,7 +32,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
   };
 
   return (
-    <article className="group relative py-4 border-b border-border/20 last:border-b-0">
+    <article className={`group relative py-4 border-b border-border/20 last:border-b-0 ${note.pinned ? 'pl-3 border-l-2 border-l-foreground/15' : ''}`}>
       {/* Timestamp + actions row */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
@@ -41,7 +41,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
               <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
             </svg>
           )}
-          <span className="text-[11px] text-muted-foreground/40 tabular-nums">
+          <span className="text-[11px] text-muted-foreground/60 tabular-nums">
             {formatDate(note.createdAt)}
           </span>
         </div>
@@ -73,7 +73,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
       </div>
 
       {/* Content -- normal weight, not bold */}
-      <p className="text-[13px] font-normal text-foreground/80 leading-[1.75] whitespace-pre-wrap">
+      <p className="text-[13px] font-normal text-foreground/85 leading-[1.75] whitespace-pre-wrap">
         {note.content}
       </p>
       
@@ -106,7 +106,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
       {note.tags && note.tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mt-2.5">
           {note.tags.map((tag, idx) => (
-            <span key={idx} className="text-[10px] font-normal text-muted-foreground/40">
+            <span key={idx} className="text-[10px] font-normal text-muted-foreground/60">
               #{tag.trim()}
             </span>
           ))}
