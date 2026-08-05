@@ -30,9 +30,10 @@ public class WallpaperService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<WallpaperDto> getActiveWallpaper() {
-        return wallpaperRepository.findByIsActiveTrue()
-                .map(WallpaperDto::fromEntity);
+    public List<WallpaperDto> getActiveWallpapers() {
+        return wallpaperRepository.findAllByIsActiveTrue().stream()
+                .map(WallpaperDto::fromEntity)
+                .toList();
     }
 
     @Transactional
@@ -51,13 +52,21 @@ public class WallpaperService {
 
     @Transactional
     public WallpaperDto activateWallpaper(UUID id) {
-        wallpaperRepository.deactivateAll();
-        
         WallpaperEntity entity = wallpaperRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallpaper not found with id " + id));
         
-        entity.setActive(true);
+        boolean isGif = entity.getFilename().toLowerCase().endsWith(".gif");
         
+        List<WallpaperEntity> activeWallpapers = wallpaperRepository.findAllByIsActiveTrue();
+        for (WallpaperEntity active : activeWallpapers) {
+            boolean activeIsGif = active.getFilename().toLowerCase().endsWith(".gif");
+            if (isGif == activeIsGif) {
+                active.setActive(false);
+                wallpaperRepository.save(active);
+            }
+        }
+        
+        entity.setActive(true);
         WallpaperEntity saved = wallpaperRepository.save(entity);
         return WallpaperDto.fromEntity(saved);
     }

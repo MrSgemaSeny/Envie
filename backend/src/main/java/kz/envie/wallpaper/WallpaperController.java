@@ -25,10 +25,8 @@ public class WallpaperController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<ApiResponse<WallpaperDto>> getActiveWallpaper() {
-        Optional<WallpaperDto> active = wallpaperService.getActiveWallpaper();
-        return active.map(dto -> ResponseEntity.ok(ApiResponse.ok(dto)))
-                .orElseGet(() -> ResponseEntity.status(404).body(ApiResponse.error("No active wallpaper found")));
+    public ResponseEntity<ApiResponse<List<WallpaperDto>>> getActiveWallpapers() {
+        return ResponseEntity.ok(ApiResponse.ok(wallpaperService.getActiveWallpapers()));
     }
 
     @PostMapping

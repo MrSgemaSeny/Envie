@@ -47,7 +47,7 @@ export function WallpaperPage() {
               disabled={deactivate.isPending}
               className="bg-muted text-foreground border border-border px-4 py-2 rounded-md text-sm font-medium hover:bg-muted/80 transition-all duration-200 ease-out active:scale-[0.98] shadow-sm"
             >
-              Clear Background
+              Deactivate All
             </button>
           )}
           <label className="cursor-pointer bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-all duration-200 ease-out active:scale-[0.98] shadow-sm">

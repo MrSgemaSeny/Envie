@@ -8,7 +8,7 @@ import { IdeasPage } from './pages/IdeasPage/IdeasPage';
 import { TemplatesPage } from './pages/TemplatesPage/TemplatesPage';
 import { WallpaperPage } from './pages/WallpaperPage/WallpaperPage';
 import { LandingPage } from './pages/LandingPage/LandingPage';
-import { useActiveWallpaper } from './entities/wallpaper/api';
+import { useActiveWallpapers } from './entities/wallpaper/api';
 import { Toaster, toast } from 'sonner';
 import { useEffect, useState } from 'react';
 
@@ -48,13 +48,15 @@ function SidebarLink({ to, children }: { to: string; children: React.ReactNode }
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const { data: activeWallpaper } = useActiveWallpaper();
-  const isVideo = activeWallpaper?.filename ? /\.(mp4|webm|mov)$/i.test(activeWallpaper.filename) : false;
-  const isGif = activeWallpaper?.filename ? /\.gif$/i.test(activeWallpaper.filename) : false;
+  const { data: activeWallpapers } = useActiveWallpapers();
+  const activeBackground = activeWallpapers?.find(w => !/\.gif$/i.test(w.filename));
+  const activeGif = activeWallpapers?.find(w => /\.gif$/i.test(w.filename));
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const isVideo = activeBackground?.filename ? /\.(mp4|webm|mov)$/i.test(activeBackground.filename) : false;
   
-  const bgStyle = activeWallpaper && !isVideo && !isGif ? {
-    backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeWallpaper.filename})`,
+  const bgStyle = activeBackground && !isVideo ? {
+    backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeBackground.filename})`,
     backgroundSize: 'contain',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
@@ -63,9 +65,9 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden selection:bg-primary/20 relative" style={bgStyle}>
-      {activeWallpaper && isVideo && (
+      {activeBackground && isVideo && (
         <video
-          src={`${apiClient.defaults.baseURL}/media/${activeWallpaper.filename}`}
+          src={`${apiClient.defaults.baseURL}/media/${activeBackground.filename}`}
           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
           muted
           loop
@@ -73,7 +75,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           playsInline
         />
       )}
-      {activeWallpaper && !isGif && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
+      {activeBackground && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
       
       {/* Collapsible Hamburger Button */}
       <button
@@ -108,10 +110,10 @@ function Layout({ children }: { children: React.ReactNode }) {
           </nav>
           
           {/* Active GIF Wallpaper in sidebar 1x1 */}
-          {activeWallpaper && isGif && (
+          {activeGif && (
             <div className="mt-auto pt-4 border-t border-border/10">
               <img
-                src={`${apiClient.defaults.baseURL}/media/${activeWallpaper.filename}`}
+                src={`${apiClient.defaults.baseURL}/media/${activeGif.filename}`}
                 alt="active gif"
                 className="w-full aspect-square object-cover rounded-xl border border-border/40"
               />
