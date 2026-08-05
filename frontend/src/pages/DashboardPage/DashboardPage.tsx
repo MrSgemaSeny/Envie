@@ -149,7 +149,7 @@ export const DashboardPage: React.FC = () => {
     scene.add(cube);
 
     // Glowing core
-    const coreGeo = new THREE.IcosahedronGeometry(0.6, 2);
+    const coreGeo = new THREE.SphereGeometry(0.7, 24, 24);
     const coreMat = new THREE.MeshStandardMaterial({
       color: 0x222222,
       emissive: 0xffffff,
@@ -473,6 +473,7 @@ export const DashboardPage: React.FC = () => {
     triggers.push(
       ScrollTrigger.create({
         trigger: '#about',
+        scroller: document.querySelector('main') || window,
         start: 'top 80%',
         onEnter: () => {
           gsap.from('#about .about-label', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' });
@@ -489,6 +490,7 @@ export const DashboardPage: React.FC = () => {
       triggers.push(
         ScrollTrigger.create({
           trigger: `#tb-${i}`,
+          scroller: document.querySelector('main') || window,
           start: 'top 85%',
           onEnter: () => {
             gsap.fromTo(
@@ -506,6 +508,7 @@ export const DashboardPage: React.FC = () => {
     triggers.push(
       ScrollTrigger.create({
         trigger: '#tech',
+        scroller: document.querySelector('main') || window,
         start: 'top 80%',
         onEnter: () => {
           gsap.from('#tech .tech-label', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' });
@@ -520,6 +523,7 @@ export const DashboardPage: React.FC = () => {
     triggers.push(
       ScrollTrigger.create({
         trigger: '#work',
+        scroller: document.querySelector('main') || window,
         start: 'top 80%',
         onEnter: () => {
           gsap.from('#work .work-header', { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out' });
