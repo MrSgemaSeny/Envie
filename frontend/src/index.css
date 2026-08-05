@@ -3,11 +3,11 @@
 @theme {
   --color-background: #09090b;        /* zinc-950, фон страницы */
   --color-foreground: #fafafa;        /* zinc-50, основной текст */
-  --color-card: #18181b;              /* zinc-900, карточки/панели */
+  --color-card: rgba(24, 24, 27, 0.8); /* zinc-900 with 80% opacity */
   --color-card-foreground: #fafafa;
   --color-border: #27272a;            /* zinc-800 */
   --color-input: #27272a;
-  --color-muted: #27272a;
+  --color-muted: rgba(39, 39, 42, 0.8);
   --color-muted-foreground: #a1a1aa;  /* zinc-400, вторичный текст */
   --color-primary: #fafafa;           /* белая кнопка */
   --color-primary-foreground: #09090b;/* чёрный текст на белой кнопке */
@@ -17,6 +17,15 @@
 
   --shadow-glow: 0 0 15px rgba(255, 255, 255, 0.05);
   --shadow-glow-hover: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+@layer utilities {
+  .bg-card {
+    background-color: var(--color-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
 
   /* Emil's easings */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);

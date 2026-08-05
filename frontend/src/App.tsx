@@ -6,6 +6,8 @@ import { FeedPage } from './pages/FeedPage/FeedPage';
 import { BoardPage } from './pages/BoardPage/BoardPage';
 import { IdeasPage } from './pages/IdeasPage/IdeasPage';
 import { TemplatesPage } from './pages/TemplatesPage/TemplatesPage';
+import { WallpaperPage } from './pages/WallpaperPage/WallpaperPage';
+import { useActiveWallpaper } from './entities/wallpaper/api';
 import { Toaster, toast } from 'sonner';
 import { useEffect } from 'react';
 
@@ -45,9 +47,18 @@ function SidebarLink({ to, children }: { to: string; children: React.ReactNode }
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
+  const { data: activeWallpaper } = useActiveWallpaper();
+  
+  const bgStyle = activeWallpaper ? {
+    backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeWallpaper.filename})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
+  } : {};
+
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden selection:bg-primary/20">
-      <aside className="w-56 border-r border-border bg-background flex flex-col p-4 flex-shrink-0">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden selection:bg-primary/20 relative" style={bgStyle}>
+      {activeWallpaper && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
+      <aside className="w-56 border-r border-border/50 bg-background/60 backdrop-blur-md flex flex-col p-4 flex-shrink-0 z-10 relative">
         <div className="mb-6 px-2 flex items-center gap-2">
           <div className="w-6 h-6 rounded bg-foreground flex items-center justify-center">
             <div className="w-3 h-3 bg-background rounded-sm" />
@@ -63,7 +74,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           <SidebarLink to="/wallpaper">Wallpaper</SidebarLink>
         </nav>
       </aside>
-      <main className="flex-1 overflow-auto bg-background p-6 max-w-6xl mx-auto w-full">
+      <main className="flex-1 overflow-auto p-6 max-w-6xl mx-auto w-full z-10 relative">
         {children}
       </main>
       <HealthCheck />
@@ -82,7 +93,7 @@ export default function App() {
           <Route path="/board" element={<BoardPage />} />
           <Route path="/ideas" element={<IdeasPage />} />
           <Route path="/templates" element={<TemplatesPage />} />
-          <Route path="/wallpaper" element={<div className="text-muted-foreground">Wallpaper Page Placeholder</div>} />
+          <Route path="/wallpaper" element={<WallpaperPage />} />
         </Routes>
       </Layout>
     </BrowserRouter>

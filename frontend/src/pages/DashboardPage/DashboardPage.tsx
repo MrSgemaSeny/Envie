@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNotes } from '../../entities/note/api';
+import { useTasks } from '../../entities/task/api';
+import { useIdeas } from '../../entities/idea/api';
 
 export const DashboardPage: React.FC = () => {
+  const { data: notes, isLoading: isNotesLoading } = useNotes();
+  const { data: tasks, isLoading: isTasksLoading } = useTasks();
+  const { data: ideas, isLoading: isIdeasLoading } = useIdeas();
+
   return (
     <div className="flex flex-col gap-8 w-full animate-in fade-in duration-500">
       <div className="flex flex-col gap-2">
@@ -17,17 +24,23 @@ export const DashboardPage: React.FC = () => {
         {/* Stat Card 1 */}
         <div className="p-5 rounded-xl border border-border bg-card shadow-sm flex flex-col gap-1">
           <span className="text-sm font-medium text-muted-foreground">Total Notes</span>
-          <span className="text-2xl font-semibold text-foreground">124</span>
+          <span className="text-2xl font-semibold text-foreground">
+            {isNotesLoading ? <div className="h-8 w-16 bg-muted animate-pulse rounded" /> : notes?.length || 0}
+          </span>
         </div>
         {/* Stat Card 2 */}
         <div className="p-5 rounded-xl border border-border bg-card shadow-sm flex flex-col gap-1">
           <span className="text-sm font-medium text-muted-foreground">Active Tasks</span>
-          <span className="text-2xl font-semibold text-foreground">12</span>
+          <span className="text-2xl font-semibold text-foreground">
+            {isTasksLoading ? <div className="h-8 w-16 bg-muted animate-pulse rounded" /> : tasks?.length || 0}
+          </span>
         </div>
         {/* Stat Card 3 */}
         <div className="p-5 rounded-xl border border-border bg-card shadow-sm flex flex-col gap-1">
           <span className="text-sm font-medium text-muted-foreground">Ideas Generated</span>
-          <span className="text-2xl font-semibold text-foreground">48</span>
+          <span className="text-2xl font-semibold text-foreground">
+            {isIdeasLoading ? <div className="h-8 w-16 bg-muted animate-pulse rounded" /> : ideas?.length || 0}
+          </span>
         </div>
       </div>
 
