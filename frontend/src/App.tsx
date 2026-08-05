@@ -108,11 +108,11 @@ function Layout({ children }: { children: React.ReactNode }) {
       {activeBackground && <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />}
       
       {!activeBackground && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pointer-events-none select-none opacity-30">
-          <p className="font-sans font-bold text-lg sm:text-xl tracking-[0.2em] text-foreground uppercase mb-2">
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pointer-events-none select-none opacity-40">
+          <p className="font-serif font-black text-3xl sm:text-5xl tracking-[0.2em] text-foreground uppercase mb-2">
             Nothing is impossible.
           </p>
-          <p className="font-sans font-bold text-lg sm:text-xl tracking-[0.2em] text-foreground uppercase">
+          <p className="font-serif font-black text-3xl sm:text-5xl tracking-[0.2em] text-foreground uppercase">
             Believe in yourself.
           </p>
         </div>

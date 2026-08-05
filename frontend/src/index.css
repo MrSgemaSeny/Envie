@@ -24,6 +24,7 @@
   
   --font-sans: 'Geist Sans', sans-serif;
   --font-mono: 'Geist Mono', monospace;
+  --font-serif: 'Playfair Display', serif;
 }
 
 @layer utilities {
