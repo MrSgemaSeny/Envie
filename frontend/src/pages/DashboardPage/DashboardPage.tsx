@@ -30,7 +30,6 @@ export const DashboardPage: React.FC = () => {
   const ladderCanvasRef = useRef<HTMLCanvasElement>(null);
 
   // Scroll and Counter Refs
-  const ladderProgressFillRef = useRef<HTMLDivElement>(null);
   const factRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Carousel Refs
@@ -412,11 +411,6 @@ export const DashboardPage: React.FC = () => {
 
       ladderGroup.rotation.y = ladderRot + time * 0.04;
 
-      const progressFill = ladderProgressFillRef.current;
-      if (progressFill) {
-        progressFill.style.height = scrollP * 100 + '%';
-      }
-
       highlightRungs(scrollP);
       renderer.render(scene, cam);
     };
@@ -774,9 +768,6 @@ export const DashboardPage: React.FC = () => {
       {/* FIXED HELIX SCROLL LADDER BACKGROUND CONTAINER */}
       <div className="ladder-container-fixed" id="ladder-container-fixed">
         <canvas id="ladder-canvas" ref={ladderCanvasRef}></canvas>
-        <div id="ladder-progress">
-          <div id="ladder-progress-fill" ref={ladderProgressFillRef}></div>
-        </div>
       </div>
 
       {/* LADDER SCROLL ROW MODULES */}
@@ -879,15 +870,6 @@ export const DashboardPage: React.FC = () => {
 
       {/* FOOTER */}
       <footer id="footer">
-        <div id="footer-lines">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div 
-              key={i} 
-              className="footer-line" 
-              style={{ top: i * 12 + 4 + 'px' }} 
-            />
-          ))}
-        </div>
         <div className="footer-top">
           <div className="footer-cta">
             Собери свой<br />
