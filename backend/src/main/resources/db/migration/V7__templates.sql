@@ -1,0 +1,7 @@
+CREATE TABLE templates (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL
+);

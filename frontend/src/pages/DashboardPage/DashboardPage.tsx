@@ -63,7 +63,7 @@ export const DashboardPage: React.FC = () => {
 
   // Nav scroll logic (tracks the scrollable main element)
   useEffect(() => {
-    const mainEl = document.querySelector('main');
+    const mainEl = document.getElementById('main-scroll-area');
     const scrollTarget = mainEl || window;
     let lastY = 0;
     const handleScroll = () => {
@@ -241,7 +241,7 @@ export const DashboardPage: React.FC = () => {
     const canvas = ladderCanvasRef.current;
     if (!canvas) return;
 
-    const mainEl = document.querySelector('main');
+    const mainEl = document.getElementById('main-scroll-area');
     if (!mainEl) return;
 
     const W = () => canvas.parentElement?.clientWidth || window.innerWidth;
@@ -473,7 +473,7 @@ export const DashboardPage: React.FC = () => {
     triggers.push(
       ScrollTrigger.create({
         trigger: '#about',
-        scroller: document.querySelector('main') || window,
+        scroller: document.getElementById('main-scroll-area') || window,
         start: 'top 80%',
         onEnter: () => {
           gsap.from('#about .about-label', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' });
@@ -490,7 +490,7 @@ export const DashboardPage: React.FC = () => {
       triggers.push(
         ScrollTrigger.create({
           trigger: `#tb-${i}`,
-          scroller: document.querySelector('main') || window,
+          scroller: document.getElementById('main-scroll-area') || window,
           start: 'top 85%',
           onEnter: () => {
             gsap.fromTo(
@@ -508,7 +508,7 @@ export const DashboardPage: React.FC = () => {
     triggers.push(
       ScrollTrigger.create({
         trigger: '#tech',
-        scroller: document.querySelector('main') || window,
+        scroller: document.getElementById('main-scroll-area') || window,
         start: 'top 80%',
         onEnter: () => {
           gsap.from('#tech .tech-label', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' });
@@ -523,7 +523,7 @@ export const DashboardPage: React.FC = () => {
     triggers.push(
       ScrollTrigger.create({
         trigger: '#work',
-        scroller: document.querySelector('main') || window,
+        scroller: document.getElementById('main-scroll-area') || window,
         start: 'top 80%',
         onEnter: () => {
           gsap.from('#work .work-header', { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out' });

@@ -20,13 +20,8 @@ export function useActiveWallpapers() {
         const res = await apiClient.get<ApiResponse<Wallpaper[]>>('/wallpapers/active');
         return res.data.data;
       } catch (err) {
-        if (err instanceof Error && 'response' in err) {
-          const axiosErr = err as { response?: { status: number } };
-          if (axiosErr.response?.status === 404) {
-            return [];
-          }
-        }
-        throw err;
+        console.error('Failed to fetch active wallpapers:', err);
+        return [];
       }
     },
     retry: false,

@@ -49,4 +49,12 @@ public class FileStorageService {
         }
         return resolvedPath;
     }
+    public void deleteFile(String filename) {
+        try {
+            Path filePath = getFilePath(filename);
+            Files.deleteIfExists(filePath);
+        } catch (Exception ex) {
+            System.err.println("Failed to delete file " + filename + ": " + ex.getMessage());
+        }
+    }
 }

@@ -72,11 +72,14 @@ public class NoteService {
 
     @Transactional
     public void deleteNote(UUID id) {
-        if (!noteRepository.existsById(id)) {
-            throw new RuntimeException("Note not found");
+        NoteEntity note = noteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Note not found"));
+                
+        for (NoteMediaEntity media : note.getMedia()) {
+            fileStorageService.deleteFile(media.getFilePath());
         }
+        
         noteRepository.deleteById(id);
-        // Note: files on disk are kept in this simple implementation, or can be cleaned up
     }
 
     private NoteDto mapToDto(NoteEntity entity) {

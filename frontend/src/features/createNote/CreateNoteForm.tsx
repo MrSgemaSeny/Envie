@@ -7,6 +7,7 @@ export const CreateNoteForm: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileDocInputRef = useRef<HTMLInputElement>(null);
   
   const { mutate: createNote, isPending } = useCreateNote();
 
@@ -34,14 +35,21 @@ export const CreateNoteForm: React.FC = () => {
     setFiles(prev => prev.filter((_, i) => i !== index));
     setPreviews(prev => prev.filter((_, i) => i !== index));
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileDocInputRef.current) fileDocInputRef.current.value = '';
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
 
+    const normalizedTags = tags
+      .split(',')
+      .map(t => t.trim().replace(/^#+/, ''))
+      .filter(t => t.length > 0)
+      .join(',');
+
     createNote(
-      { content, tags, files },
+      { content, tags: normalizedTags, files },
       {
         onSuccess: () => {
           setContent('');
@@ -49,6 +57,7 @@ export const CreateNoteForm: React.FC = () => {
           setFiles([]);
           setPreviews([]);
           if (fileInputRef.current) fileInputRef.current.value = '';
+          if (fileDocInputRef.current) fileDocInputRef.current.value = '';
         },
       }
     );
@@ -133,7 +142,7 @@ export const CreateNoteForm: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
               </svg>
               File
-              <input type="file" multiple accept=".pdf,.md,.txt,.doc,.docx" onChange={handleFileChange} className="hidden" />
+              <input type="file" multiple accept=".pdf,.md,.txt,.doc,.docx" onChange={handleFileChange} ref={fileDocInputRef} className="hidden" />
             </label>
           </div>
 

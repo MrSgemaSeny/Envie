@@ -165,7 +165,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           )}
         </div>
       </aside>
-      <main className={`flex-1 overflow-auto w-full z-10 relative transition-all duration-300 ease-in-out ${
+      <main id="main-scroll-area" className={`flex-1 overflow-auto w-full z-10 relative transition-all duration-300 ease-in-out ${
         isSidebarOpen ? 'pl-0' : 'pl-14'
       }`}>
         {children}
