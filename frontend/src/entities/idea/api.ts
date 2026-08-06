@@ -9,11 +9,13 @@ export const ideaKeys = {
   detail: (id: string) => [...ideaKeys.all, 'detail', id] as const,
 };
 
-export function useGetIdeas() {
+export function useGetIdeas(search?: string) {
   return useQuery({
-    queryKey: ideaKeys.lists(),
+    queryKey: [...ideaKeys.lists(), search],
     queryFn: async () => {
-      const response = await apiClient.get<ApiResponse<Idea[]>>('/ideas');
+      const response = await apiClient.get<ApiResponse<Idea[]>>('/ideas', {
+        params: { search: search || undefined }
+      });
       return response.data.data;
     },
   });

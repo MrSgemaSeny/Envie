@@ -72,6 +72,14 @@ public class WallpaperService {
     }
 
     @Transactional
+    public void deactivateWallpaper(UUID id) {
+        WallpaperEntity entity = wallpaperRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Wallpaper not found with id " + id));
+        entity.setActive(false);
+        wallpaperRepository.save(entity);
+    }
+
+    @Transactional
     public void deactivateAll() {
         wallpaperRepository.deactivateAll();
     }

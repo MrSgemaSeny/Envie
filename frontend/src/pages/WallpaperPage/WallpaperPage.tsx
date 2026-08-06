@@ -43,7 +43,7 @@ export function WallpaperPage() {
         <div className="flex items-center gap-3">
           {wallpapers.some(w => w.isActive) && (
             <button 
-              onClick={() => deactivate.mutate()}
+              onClick={() => deactivate.mutate(undefined)}
               disabled={deactivate.isPending}
               className="bg-muted text-foreground border border-border px-4 py-2 rounded-md text-sm font-medium hover:bg-muted/80 transition-all duration-200 ease-out active:scale-[0.98] shadow-sm"
             >
@@ -107,7 +107,7 @@ export function WallpaperPage() {
                 )}
                 {wp.isActive && (
                   <button 
-                    onClick={() => deactivate.mutate()}
+                    onClick={() => deactivate.mutate(wp.id)}
                     disabled={deactivate.isPending}
                     className="bg-muted text-foreground border border-border px-4 py-2 rounded-md text-sm font-medium hover:bg-muted/80 active:scale-95 transition-transform duration-200 ease-out"
                   >

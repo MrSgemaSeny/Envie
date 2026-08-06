@@ -25,8 +25,8 @@ public class IdeaService {
     private final IdeaRepository ideaRepository;
 
     @Transactional(readOnly = true)
-    public Page<IdeaResponse> getIdeas(Pageable pageable) {
-        return ideaRepository.findAllByOrderByCreatedAtDesc(pageable)
+    public Page<IdeaResponse> getIdeas(String search, Pageable pageable) {
+        return ideaRepository.searchIdeas(search, pageable)
                 .map(this::mapToResponse);
     }
 

@@ -25,8 +25,9 @@ public class NoteController {
 
     @GetMapping
     public ApiResponse<List<NoteDto>> getNotes(
+            @RequestParam(required = false) String search,
             @PageableDefault(size = 50, sort = "createdAt") Pageable pageable) {
-        Page<NoteDto> notesPage = noteService.getAllNotes(pageable);
+        Page<NoteDto> notesPage = noteService.getAllNotes(search, pageable);
         return ApiResponse.ok(notesPage.getContent());
     }
 

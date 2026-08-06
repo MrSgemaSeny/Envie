@@ -21,8 +21,10 @@ public class IdeaController {
     private final IdeaService ideaService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<IdeaResponse>>> getIdeas(Pageable pageable) {
-        List<IdeaResponse> ideas = ideaService.getIdeas(pageable).getContent();
+    public ResponseEntity<ApiResponse<List<IdeaResponse>>> getIdeas(
+            @RequestParam(required = false) String search,
+            Pageable pageable) {
+        List<IdeaResponse> ideas = ideaService.getIdeas(search, pageable).getContent();
         return ResponseEntity.ok(ApiResponse.ok(ideas));
     }
 

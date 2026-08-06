@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGetIdeas } from '../../entities/idea/api';
 import { IdeaCard } from '../../widgets/IdeaCard/ui/IdeaCard';
 import { CreateIdeaDrawer } from '../../features/createIdea/ui/CreateIdeaDrawer';
 
 export const IdeasPage: React.FC = () => {
-  const { data: ideas, isLoading, isError } = useGetIdeas();
+  const [searchInput, setSearchInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const { data: ideas, isLoading, isError } = useGetIdeas(searchQuery);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   return (
@@ -22,6 +32,21 @@ export const IdeasPage: React.FC = () => {
               + New Idea
             </button>
           }
+        />
+      </div>
+      
+      <div className="relative max-w-md -mt-2">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg className="w-4 h-4 text-muted-foreground/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Search ideas..."
+          className="w-full bg-background border border-border/30 rounded-lg py-2 pl-9 pr-4 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
         />
       </div>
 

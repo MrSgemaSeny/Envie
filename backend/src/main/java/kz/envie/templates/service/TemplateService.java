@@ -17,6 +17,37 @@ import java.util.stream.Collectors;
 public class TemplateService {
 
     private final TemplateRepository templateRepository;
+    
+    @org.springframework.beans.factory.annotation.Value("${envie.templates-dir:templates}")
+    private String templatesDir;
+
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        try {
+            java.nio.file.Path dirPath = java.nio.file.Paths.get(templatesDir);
+            if (!java.nio.file.Files.exists(dirPath)) return;
+            
+            try (java.util.stream.Stream<java.nio.file.Path> paths = java.nio.file.Files.list(dirPath)) {
+                paths.filter(p -> p.toString().endsWith(".md"))
+                     .forEach(p -> {
+                         String name = p.getFileName().toString();
+                         if (templateRepository.findByName(name).isEmpty()) {
+                             try {
+                                 String content = java.nio.file.Files.readString(p);
+                                 TemplateEntity entity = new TemplateEntity();
+                                 entity.setName(name);
+                                 entity.setContent(content);
+                                 templateRepository.save(entity);
+                             } catch (Exception e) {
+                                 // Ignore individual file read errors
+                             }
+                         }
+                     });
+            }
+        } catch (Exception e) {
+            // Ignore directory read errors
+        }
+    }
 
     @Transactional(readOnly = true)
     public List<TemplateDto> getTemplates() {

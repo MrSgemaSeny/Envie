@@ -25,8 +25,8 @@ public class NoteService {
     private final FileStorageService fileStorageService;
 
     @Transactional(readOnly = true)
-    public Page<NoteDto> getAllNotes(Pageable pageable) {
-        return noteRepository.findAllByOrderByPinnedDescCreatedAtDesc(pageable)
+    public Page<NoteDto> getAllNotes(String search, Pageable pageable) {
+        return noteRepository.searchNotes(search, pageable)
                 .map(this::mapToDto);
     }
 

@@ -1,11 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useNotes } from '../../entities/note/api';
 import { CreateNoteForm } from '../../features/createNote/CreateNoteForm';
 import { NoteCard } from '../../widgets/NoteCard/NoteCard';
 import { NoteDto } from '../../entities/note/types';
 
 export const FeedPage: React.FC = () => {
-  const { data: notes, isLoading, error } = useNotes();
+  const [searchInput, setSearchInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const { data: notes, isLoading, error } = useNotes(searchQuery);
 
   const { pinned, unpinned } = useMemo(() => {
     if (!notes) return { pinned: [], unpinned: [] };
@@ -50,6 +60,22 @@ export const FeedPage: React.FC = () => {
       {/* Feed */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-6 md:p-8 max-w-2xl">
+          {/* Search */}
+          <div className="mb-6 relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="w-4 h-4 text-muted-foreground/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Search notes and tags..."
+              className="w-full bg-background border border-border/30 rounded-lg py-2 pl-9 pr-4 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+            />
+          </div>
+
           {/* Loading */}
           {isLoading && (
             <div className="grid gap-4">

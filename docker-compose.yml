@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: envie_db
+    environment:
+      POSTGRES_DB: envie
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: pass1
+    ports:
+      - "5432:5432"
+    volumes:
+      - envie_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: envie_backend
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/envie
+      SPRING_DATASOURCE_USERNAME: test_user
+      SPRING_DATASOURCE_PASSWORD: pass1
+      ENVIE_UPLOAD_DIR: /app/uploads
+      ENVIE_TEMPLATES_DIR: /app/templates
+    volumes:
+      - envie_uploads:/app/uploads
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: envie_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  envie_pgdata:
+  envie_uploads:

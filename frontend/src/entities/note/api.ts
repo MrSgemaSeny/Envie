@@ -4,11 +4,11 @@ import { NoteDto, CreateNotePayload } from './types';
 
 
 
-export const useNotes = () => {
+export const useNotes = (search?: string) => {
   return useQuery({
-    queryKey: ['notes'],
+    queryKey: ['notes', search],
     queryFn: async () => {
-      const response = await apiClient.get('/notes');
+      const response = await apiClient.get('/notes', { params: { search: search || undefined } });
       return response.data.data as NoteDto[];
     },
   });
