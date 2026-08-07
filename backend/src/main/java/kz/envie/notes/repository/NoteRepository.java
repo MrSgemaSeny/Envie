@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface NoteRepository extends JpaRepository<NoteEntity, UUID> {
     @EntityGraph(attributePaths = {"tags", "media"})
-    @Query("SELECT DISTINCT n FROM NoteEntity n LEFT JOIN n.tags t WHERE :search IS NULL OR LOWER(n.content) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(t.tag) LIKE LOWER(CONCAT('%', :search, '%')) ORDER BY n.pinned DESC, n.createdAt DESC")
+    @Query("SELECT DISTINCT n FROM NoteEntity n LEFT JOIN n.tags t WHERE cast(:search as string) IS NULL OR LOWER(n.content) LIKE LOWER(CONCAT('%', cast(:search as string), '%')) OR LOWER(t.tag) LIKE LOWER(CONCAT('%', cast(:search as string), '%')) ORDER BY n.pinned DESC, n.createdAt DESC")
     Page<NoteEntity> searchNotes(@org.springframework.data.repository.query.Param("search") String search, Pageable pageable);
     
 }
