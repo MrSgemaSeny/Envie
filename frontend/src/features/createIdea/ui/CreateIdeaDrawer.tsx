@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Drawer } from 'vaul';
 import { useCreateIdea, useUpdateIdea } from '../../../entities/idea/api';
 import { Idea, IdeaStatus } from '../../../entities/idea/types';
@@ -19,8 +19,30 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
   const [monetization, setMonetization] = useState('');
   const [status, setStatus] = useState<IdeaStatus>('RAW');
 
+  const summaryRef = useRef<HTMLTextAreaElement>(null);
+  const problemRef = useRef<HTMLTextAreaElement>(null);
+  const solutionRef = useRef<HTMLTextAreaElement>(null);
+  const audienceRef = useRef<HTMLTextAreaElement>(null);
+  const monetizationRef = useRef<HTMLTextAreaElement>(null);
+
   const createIdea = useCreateIdea();
   const updateIdea = useUpdateIdea();
+
+  const adjustTextareaHeight = (el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  };
+
+  const autoResizeAll = () => {
+    requestAnimationFrame(() => {
+      adjustTextareaHeight(summaryRef.current);
+      adjustTextareaHeight(problemRef.current);
+      adjustTextareaHeight(solutionRef.current);
+      adjustTextareaHeight(audienceRef.current);
+      adjustTextareaHeight(monetizationRef.current);
+    });
+  };
 
   useEffect(() => {
     if (idea && open) {
@@ -41,6 +63,15 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
       setStatus('RAW');
     }
   }, [idea, open]);
+
+  useEffect(() => {
+    if (open) {
+      autoResizeAll();
+      // Double check after animation frames
+      const timer = setTimeout(autoResizeAll, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [open, idea, summary, problem, solution, audience, monetization]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,9 +108,7 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
   const isPending = createIdea.isPending || updateIdea.isPending;
 
   const handleAutoResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    const target = e.currentTarget;
-    target.style.height = 'auto';
-    target.style.height = `${target.scrollHeight}px`;
+    adjustTextareaHeight(e.currentTarget);
   };
 
   return (
@@ -132,6 +161,7 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-zinc-400">Summary <span className="text-red-400">*</span></label>
               <textarea
+                ref={summaryRef}
                 rows={2}
                 placeholder="Brief description of the core idea"
                 value={summary}
@@ -146,6 +176,7 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-400">Problem Statement</label>
                 <textarea
+                  ref={problemRef}
                   rows={3}
                   placeholder="What pain point does this solve?"
                   value={problem}
@@ -158,6 +189,7 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-400">Proposed Solution</label>
                 <textarea
+                  ref={solutionRef}
                   rows={3}
                   placeholder="How does your solution address the problem?"
                   value={solution}
@@ -172,23 +204,27 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-400">Target Audience</label>
-                <input
-                  type="text"
+                <textarea
+                  ref={audienceRef}
+                  rows={2}
                   placeholder="Who is this for?"
                   value={audience}
+                  onInput={handleAutoResize}
                   onChange={(e) => setAudience(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150"
+                  className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 resize-none overflow-hidden leading-relaxed min-h-[50px]"
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-400">Monetization Strategy</label>
-                <input
-                  type="text"
+                <textarea
+                  ref={monetizationRef}
+                  rows={2}
                   placeholder="How will this make money?"
                   value={monetization}
+                  onInput={handleAutoResize}
                   onChange={(e) => setMonetization(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150"
+                  className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 resize-none overflow-hidden leading-relaxed min-h-[50px]"
                 />
               </div>
             </div>
