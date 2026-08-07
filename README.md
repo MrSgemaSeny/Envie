@@ -1,63 +1,90 @@
 # Envie
 
-Личный рабочий штаб (knowledge base + task management) для соло-разработчика. 
-Архитектура "Без облака. Без авторизации. Без лишнего".
+Personal knowledge base and task management for solo developers.
+"Without cloud. Without authorization. Without excess."
 
-## Модули
-- **Dashboard**: Интерактивная 3D-сцена (Three.js) с анимациями (GSAP) и статистикой.
-- **Notes**: Лента заметок с тегами, вложениями медиафайлов и быстрым поиском (ILIKE).
-- **Board**: Минималистичная Kanban-доска (задачи и подзадачи) без избыточной Jira-бюрократии.
-- **Ideas**: База идей стартапов/фич со структурой (Проблема → Решение → Аудитория → Монетизация).
-- **Templates**: Система управления Markdown-шаблонами. Автоматически строит D3-граф связей на основе префиксов файлов.
-- **Wallpaper**: Модуль кастомизации фона (изображения и видео). Автоматическая адаптация под экраны с помощью двойного слоя (заблюренный cover + резкий contain).
-- **For You**: Фокус-экран без лишнего UI для погружения в работу.
+## Modules
+- **Landing**: Minimal root page (`/`) with clock and globe. Fast loading.
+- **Dashboard**: Interactive 3D scene (Three.js) with wireframe box, glowing core, rings, GSAP animations, bento modules.
+- **Notes**: Twitter-style feed with tags, media attachments, two-column layout, timeline cards.
+- **Board**: Flat grid Kanban (tasks + subtasks) without Jira bureaucracy. Vaul drawers, Sonner toasts.
+- **Ideas**: Startup/project ideas base with structure (Problem, Solution, Audience, Monetization). Status badges.
+- **Templates**: Markdown templates system with D3 graph visualization. Stored in PostgreSQL.
+- **Wallpaper**: Customizable background (images, GIFs, video). Premium dual-layer rendering (blurred cover + 3:4 frame).
+- **For You**: Focus screen with minimal UI for deep work.
 
-## Стек технологий
+## Tech Stack
 
 **Backend:**
 - Java 17 / Spring Boot 3
-- PostgreSQL (база данных)
-- Flyway (версионирование схемы БД, миграции)
-- Gradle (сборка)
-- Архитектура: REST API, Controller-Service-Repository
+- PostgreSQL (database)
+- Flyway (schema versioning, migrations)
+- Gradle (build)
+- Architecture: REST API, Controller-Service-Repository
 
 **Frontend:**
-- React 19 / TypeScript / Vite
+- React 18 / TypeScript / Vite
 - Tailwind CSS v4
 - React Query (@tanstack/react-query)
 - React Router DOM
-- Feature-Sliced Design (FSD) архитектура
-- UI: Sonner (тосты), Vaul (шторки)
-- Графика: Three.js, GSAP, react-force-graph-2d
+- Feature-Sliced Design (FSD) architecture
+- UI: Sonner (toasts), Vaul (drawers)
+- Graphics: Three.js, GSAP, react-force-graph-2d, react-markdown
 
-## Дизайн-код
-Строгое соблюдение принципов Эмиля Ковальски (Emil Kowalski):
-- Исключительно `transform` и `opacity` для анимаций (без `transition-all`).
-- Функция плавности: `ease-out`.
-- Микроинтеракции: масштабирование кнопок при нажатии (`active:scale-95`).
-- Отсутствие эмодзи, строгая типографика (Geist), плоский премиум-дизайн с легкими тенями.
+## Design System
+Emil Kowalski principles:
+- Animations: `transform` and `opacity` only (no `transition-all`).
+- Easing: `ease-out`.
+- Micro-interactions: button scale on press (`active:scale-95`).
+- No emoji, strict typography (Geist), flat premium design with subtle shadows.
+- Semantic Tailwind tokens: `bg-background`, `text-foreground`, `border-border`.
 
-## Запуск проекта
+## Project Structure
+```
+/workspace/project/Envie/
+├── backend/           # Spring Boot application
+│   └── src/main/resources/db/migration/  # Flyway migrations
+├── frontend/          # React application
+│   └── src/
+│       ├── entities/     # Data types and API
+│       ├── features/     # User actions
+│       ├── widgets/      # Reusable components
+│       └── pages/       # Route pages
+├── templates/          # Markdown templates
+├── docker-compose.yml  # PostgreSQL + App
+└── README.md
+```
 
-**Docker (База данных + Приложение):**
+## Quick Start
+
+**Docker (Full stack):**
 ```bash
 docker-compose up -d
 ```
 
-**Локальная разработка (Backend):**
+**Local development (Backend):**
 ```bash
 cd backend
 ./gradlew bootRun
 ```
-(Требует запущенного инстанса PostgreSQL, логин/пароль/порт в `application.properties`).
+Requires PostgreSQL instance (test_user/pass1, envie database).
 
-**Локальная разработка (Frontend):**
+**Local development (Frontend):**
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-## Структура БД (Flyway)
-Все изменения базы данных строго версионируются в `backend/src/main/resources/db/migration/`. 
-Изменение существующих скриптов `V...__name.sql` запрещено, любые изменения накатываются только новыми миграциями.
+## Database (Flyway)
+All DB changes versioned in `backend/src/main/resources/db/migration/`.
+Existing `V...__name.sql` files are immutable. New changes via new migrations only.
+
+## Migrations Overview
+- V1: Initial schema
+- V2: Notes tables
+- V3: Board (tasks/subtasks)
+- V4: Ideas
+- V5: Remove AI architecture
+- V6: Wallpaper
+- V7: Templates (moved to PostgreSQL)
