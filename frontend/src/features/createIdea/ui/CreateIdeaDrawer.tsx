@@ -76,12 +76,18 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
 
   const isPending = createIdea.isPending || updateIdea.isPending;
 
+  const handleAutoResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    const target = e.currentTarget;
+    target.style.height = 'auto';
+    target.style.height = `${target.scrollHeight}px`;
+  };
+
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <Drawer.Trigger asChild>{trigger}</Drawer.Trigger>}
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/70 backdrop-blur-md z-40 transition-opacity duration-300" />
-        <Drawer.Content className="fixed inset-x-0 bottom-0 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 max-w-3xl mx-auto w-full max-h-[92vh] sm:max-h-[85vh] bg-[#0c0c0e]/95 backdrop-blur-xl border border-zinc-800/80 rounded-t-2xl sm:rounded-2xl shadow-2xl z-50 flex flex-col focus:outline-none overflow-hidden text-foreground font-sans">
+        <Drawer.Content className="fixed inset-x-0 bottom-0 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 w-[94vw] max-w-5xl mx-auto max-h-[92vh] sm:max-h-[88vh] bg-[#0c0c0e]/95 backdrop-blur-xl border border-zinc-800/80 rounded-t-2xl sm:rounded-2xl shadow-2xl z-50 flex flex-col focus:outline-none overflow-hidden text-foreground font-sans">
           {/* Mobile Handle */}
           <div className="sm:hidden w-12 h-1 bg-zinc-700/60 rounded-full mx-auto my-2.5 flex-shrink-0" />
 
@@ -108,7 +114,7 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
           </div>
 
           {/* Scrollable Form Body */}
-          <form id="create-idea-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-6 space-y-5">
+          <form id="create-idea-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
             {/* Idea Title */}
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-zinc-400">Idea Title <span className="text-red-400">*</span></label>
@@ -117,7 +123,7 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
                 placeholder="e.g. Decentralized Storage Network"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150"
+                className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150"
                 autoFocus
               />
             </div>
@@ -126,41 +132,44 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-zinc-400">Summary <span className="text-red-400">*</span></label>
               <textarea
-                rows={3}
+                rows={2}
                 placeholder="Brief description of the core idea"
                 value={summary}
+                onInput={handleAutoResize}
                 onChange={(e) => setSummary(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 resize-y leading-relaxed"
+                className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 resize-none overflow-hidden leading-relaxed min-h-[70px]"
               />
             </div>
 
             {/* Problem & Solution */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-400">Problem Statement</label>
                 <textarea
-                  rows={4}
+                  rows={3}
                   placeholder="What pain point does this solve?"
                   value={problem}
+                  onInput={handleAutoResize}
                   onChange={(e) => setProblem(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 resize-y leading-relaxed"
+                  className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 resize-none overflow-hidden leading-relaxed min-h-[90px]"
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-400">Proposed Solution</label>
                 <textarea
-                  rows={4}
+                  rows={3}
                   placeholder="How does your solution address the problem?"
                   value={solution}
+                  onInput={handleAutoResize}
                   onChange={(e) => setSolution(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 resize-y leading-relaxed"
+                  className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 resize-none overflow-hidden leading-relaxed min-h-[90px]"
                 />
               </div>
             </div>
 
             {/* Target Audience & Monetization */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-400">Target Audience</label>
                 <input
@@ -168,7 +177,7 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
                   placeholder="Who is this for?"
                   value={audience}
                   onChange={(e) => setAudience(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150"
+                  className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150"
                 />
               </div>
 
@@ -179,7 +188,7 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
                   placeholder="How will this make money?"
                   value={monetization}
                   onChange={(e) => setMonetization(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150"
+                  className="w-full px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150"
                 />
               </div>
             </div>
@@ -191,14 +200,14 @@ export const CreateIdeaDrawer: React.FC<CreateIdeaDrawerProps> = ({ idea, open, 
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as IdeaStatus)}
-                  className="w-full appearance-none px-3.5 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 cursor-pointer pr-10"
+                  className="w-full appearance-none px-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-foreground focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30 transition-all duration-150 cursor-pointer pr-10"
                 >
                   <option value="RAW" className="bg-zinc-900 text-foreground">RAW</option>
                   <option value="EXPLORING" className="bg-zinc-900 text-foreground">EXPLORING</option>
                   <option value="ACCEPTED" className="bg-zinc-900 text-foreground">ACCEPTED</option>
                   <option value="REJECTED" className="bg-zinc-900 text-foreground">REJECTED</option>
                 </select>
-                <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400">
+                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
