@@ -25,6 +25,11 @@ Explain WHY, not just WHAT (Senior Tech Lead mentoring approach: architect think
 - **Priorities on Conflict**: Correctness > Aesthetics/UX > Performance > Code Cleanliness.
 
 ## Context Management
-- **CONTEXT.md**: ALWAYS read `.agents/CONTEXT.md` at the start of a session to understand the current state.
+- **Second Brain Protocol Path**: Main Second Brain root is `C:\Users\murat\IdeaProjects\new_world\Brain's protocol - second brain`.
+- **Brain's Protocol Rules**:
+  - Before starting a session, consult `context/me.md`, `context/projects.md`, `context/rules.md`, and `context/prompts_for_ai.md` inside `C:\Users\murat\IdeaProjects\new_world\Brain's protocol - second brain`.
+  - After completing tasks and achieving a green build, log changes in `journal/YYYY-MM-DD/{project-name}.md` and update `context/projects.md` in the Second Brain directory before git push.
+- **CONTEXT.md**: ALWAYS read `.agents/CONTEXT.md` at the start of a session to understand current local state.
 - **Updating CONTEXT.md**: Whenever you complete a task, solve a major bug, or make an architectural decision, update `.agents/CONTEXT.md` to reflect the new state. 
 - **Context Size Limit**: Keep `.agents/CONTEXT.md` concise and under 200 lines. Prune old, resolved issues to make room for new ones.
+
