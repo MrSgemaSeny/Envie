@@ -87,45 +87,37 @@ function Layout({ children }: { children: React.ReactNode }) {
   
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden selection:bg-primary/20 relative">
-      {activeBackground && (
+      {activeBackground && isVideo && (
+        <video
+          src={`${apiClient.defaults.baseURL}/media/${activeBackground.filename}`}
+          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+          muted loop autoPlay playsInline
+        />
+      )}
+
+      {activeBackground && !isVideo && (
         <>
           {/* Blurred Backdrop (Cover) */}
-          {isVideo ? (
-            <video
-              src={`${apiClient.defaults.baseURL}/media/${activeBackground.filename}`}
-              className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-60 blur-2xl scale-125"
-              muted loop autoPlay playsInline
-            />
-          ) : (
-            <div 
-              className="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-60 blur-2xl scale-125"
-              style={{
-                backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeBackground.filename})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            />
-          )}
+          <div 
+            className="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-60 blur-2xl scale-125"
+            style={{
+              backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeBackground.filename})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
 
-          {/* Sharp Foreground (3:4 Framed Portrait) */}
+          {/* Sharp Foreground (3:4 Framed Portrait for images) */}
           <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none py-0 sm:py-8 lg:py-12">
             <div className="relative h-full w-full sm:w-auto sm:aspect-[3/4] sm:rounded-2xl overflow-hidden drop-shadow-[0_0_40px_rgba(0,0,0,0.7)] border-0 sm:border border-white/10 ring-0 sm:ring-1 ring-black/40 bg-background/20">
-              {isVideo ? (
-                <video
-                  src={`${apiClient.defaults.baseURL}/media/${activeBackground.filename}`}
-                  className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-                  muted loop autoPlay playsInline
-                />
-              ) : (
-                <div 
-                  className="absolute inset-0 w-full h-full pointer-events-none"
-                  style={{
-                    backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeBackground.filename})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                />
-              )}
+              <div 
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                style={{
+                  backgroundImage: `url(${apiClient.defaults.baseURL}/media/${activeBackground.filename})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              />
             </div>
           </div>
         </>
