@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/envie}
+    username: ${DATABASE_USERNAME:test_user}
+    password: ${DATABASE_PASSWORD:pass1}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+management:
+  endpoints:
+    web:
+      base-path: /api/v1/actuator
+      cors:
+        allowed-origins: http://localhost:5173
+        allowed-methods: GET,OPTIONS
+        allowed-headers: "*"
+        allow-credentials: true
+
+envie:
+  upload-dir: ${UPLOAD_DIR:./uploads}
+  templates-dir: ${TEMPLATES_DIR:../templates}
+  anthropic-api-key: ${ANTHROPIC_API_KEY:}
